@@ -1,9 +1,6 @@
 import {
 	CircleDollarSign,
 	CirclePlay,
-	Headset,
-	Home,
-	Music,
 } from "lucide-react";
 import React from "react";
 
@@ -11,7 +8,7 @@ const AudioBoxFeatures = () => {
 	return (
 		<div className="bg-[#0E070C] font-roboto w-11/12 mx-auto rounded-xl text-white py-16 my-7 px-8">
 			<div className="text-center mb-12">
-				<h1 className="text-4xl font-bold mb-2">A New Way to Listen</h1>
+				<h1 className="text-4xl font-bold mb-2">Easy steps to begin</h1>
 				<p className="text-gray-400">
 					From discovering new tracks to supporting your favorite artists.
 				</p>
@@ -25,13 +22,11 @@ const AudioBoxFeatures = () => {
 								<CirclePlay />
 							</span>
 						</div>
-						<h2 className="ml-4 text-xl font-semibold">
-							Seamless Music Experience
-						</h2>
+						<h2 className="ml-4 text-xl font-semibold">Join & Verify</h2>
 					</div>
 					<p className="text-gray-400">
 						Enjoy uninterrupted, high-quality streaming with a user-friendly
-						interface.
+						interface .
 					</p>
 				</div>
 
@@ -43,7 +38,9 @@ const AudioBoxFeatures = () => {
 								<CirclePlay />
 							</span>
 						</div>
-						<h2 className="ml-4 text-xl font-semibold">Ad-Free Listening</h2>
+						<h2 className="ml-4 text-xl font-semibold">
+							Customize & Upload Your Music
+						</h2>
 					</div>
 					<p className="text-gray-400">
 						Enjoy uninterrupted listening with an ad-free environment.
@@ -59,11 +56,11 @@ const AudioBoxFeatures = () => {
 							</span>
 						</div>
 						<h2 className="ml-4 text-xl font-semibold">
-							NFT Music Marketplace
+							Engage Directly with Fans
 						</h2>
 					</div>
 					<p className="text-gray-400">
-						Explore and purchase music NFTs in an ad-free environment.
+						Enjoy uninterrupted listening with an ad-free environment.
 					</p>
 				</div>
 
@@ -75,10 +72,12 @@ const AudioBoxFeatures = () => {
 								<CircleDollarSign />
 							</span>
 						</div>
-						<h2 className="ml-4 text-xl font-semibold">Stream and Earn</h2>
+						<h2 className="ml-4 text-xl font-semibold">
+							Track Earnings & Grow
+						</h2>
 					</div>
 					<p className="text-gray-400">
-						Enjoy uninterrupted listening while earning through streaming.
+						Enjoy uninterrupted listening with an ad-free environment.
 					</p>
 				</div>
 			</div>
