@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import SidebarItems from "./SidebarItems";
 import {
@@ -14,12 +15,13 @@ import {
 	PowerIcon,
 } from "lucide-react";
 import Link from "next/link";
-// import UploadModal from './UploadModal';
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
+	const pathname = usePathname();
 	return (
 		<>
-			<div className="bg-custom-gradient overflow-y-scroll fixed h-screen w-[214px)] bg-black text-white text-base p-5">
+			<div className="bg-custom-gradient overflow-y-scroll lg:block md:hidden hidden fixed h-screen w-[214px)] bg-black text-white text-base p-5">
 				<Link href="/" className="flex items-center space-x-3 mb-10">
 					<div className="bg-pink-500 rounded-full h-10 w-10"></div>
 					<h1 className="text-2xl font-semibold text-pink-400">AudioBox</h1>
@@ -28,28 +30,37 @@ const Sidebar = () => {
 				<nav className="space-y-4">
 					
 					<div className="space-y-6">
-						<SidebarItems icon={Wallet} label="Dashboard" to="/dashboard" />
-						<SidebarItems icon={Music} label="Albums" to="/dashboard" />
+						
+						<SidebarItems icon={Wallet} label="Dashboard" to="/dashboard" isActive={pathname === "/dashboard"}/>
+						<SidebarItems icon={Music} label="Albums" to="/dashboard/album" isActive={pathname === "/dashboard/album"}/>
 						<SidebarItems
 							icon={FileMusic}
 							label="Wallet"
-							to="/dashboard/album"
+							to="/dashboard/wallet"
+							isActive={pathname === "/dashboard/wallet"}
 						/>
 						<SidebarItems
 							icon={FileMusic}
 							label="Subscription"
-							to="/dashboard/album"
+							to="/dashboard/subscription"
+							isActive={pathname === "/dashboard/subscription"}
 						/>
 						<SidebarItems
 							icon={FileMusic}
 							label="Audience Insights"
-							to="/dashboard/album"
+							to="/dashboard/audience"
+							isActive={pathname === "/dashboard/audience"}
 						/>
             <SidebarItems
 							icon={FileMusic}
 							label="Settings"
-							to="/dashboard/album"
+							to="/dashboard/settings"
+							isActive={pathname === "/dashboard/settings"}
 						/>
+						<div>
+
+						<Link href="/dashboard/upload" className="bg-[#DC143C] text-sm text-[#fff] font-semibold py-2 px-4 rounded-full">Upload Music</Link>
+						</div>
 					</div>
 
 					
@@ -59,11 +70,12 @@ const Sidebar = () => {
 							icon={FileMusic}
 							label="Profile"
 							to="/dashboard/profile"
+							isActive={pathname === "/dashboard/profile"}
 						/>
 						<SidebarItems
 							icon={PowerIcon}
 							label="Log Out"
-							to="/dashboard/album"
+							to="/dashboard"
 						/>
             
 						</div>

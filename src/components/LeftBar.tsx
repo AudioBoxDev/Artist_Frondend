@@ -6,7 +6,7 @@ const LeftBar = () => {
 	return (
 		<>
 			<div className="bg-custom-gradient space-y-2 mt-2 p-6 rounded-3xl">
-				<h2 className="text-base">Welcome Back</h2>
+				<h2 className="text-xs text-[#666C6C]">Welcome Back</h2>
 				<h1 className="text-white font-bold text-5xl">Wini</h1>
 				<div className="text-gray-400">
 					<h3 className="font-semibold text-sm text-gray-500 mb-4">

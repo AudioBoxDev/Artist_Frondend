@@ -1,4 +1,4 @@
-import { SearchIcon, Upload } from "lucide-react";
+import { Search, Upload } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Input } from "./ui/input";
@@ -19,12 +19,12 @@ const Navbar = () => {
 						</ul>
 					</div>
 					<div className="w-1/2">
-						<div className="col-span-9 flex items-center space-x-2 rounded-full  bg-[#1D1F1F] h-[50px] px-3">
-							<SearchIcon className="h-4 w-4" />
-							<Input
-								type="search"
+						<div className="flex items-center bg-[#1D1F1F] rounded-full px-3 py-2">
+							<Search className="text-gray-500 mr-2" size={16} />
+							<input
+								type="text"
 								placeholder="Search by artists, songs or albums"
-								className="w-full rounded-full border-none focus:outline-none  bg-[#1D1F1F] text-white placeholder-gray-400"
+								className="w-full rounded-full  px-3 border-none focus:outline-none  bg-[#1D1F1F] text-white placeholder-gray-400"
 							/>
 						</div>
 					</div>

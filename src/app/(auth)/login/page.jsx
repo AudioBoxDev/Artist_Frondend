@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -19,7 +18,6 @@ const images = [
   "/image2.jpg",
   "/image3.jpg",
 ];
-import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 
 function LoginScreen() {
@@ -35,13 +33,13 @@ function LoginScreen() {
 
   const router = useRouter();
 
-  const account = useAccount();
+  // const account = useAccount();
 
-  useEffect(() => {
-    if (account.isConnected) {
-      router.push("/dashboard");
-    }
-  }, [account.isConnected]);
+  // useEffect(() => {
+  //   if (account.isConnected) {
+  //     router.push("/dashboard");
+  //   }
+  // }, [account.isConnected]);
 
   return (
     <div className="grid grid-cols-3  md:gap-4 gap-0 min-h-screen">
@@ -70,7 +68,7 @@ function LoginScreen() {
               </CardHeader>
               <CardFooter className="w-full">
 
-                <ConnectBtn className="w-full" />
+                {/* <ConnectBtn className="w-full" /> */}
               </CardFooter>
             </Card>
           </TabsContent>
@@ -102,15 +100,15 @@ function LoginScreen() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-5">
-                <Button className="w-full bg-pink-600 h-12 text-white rounded-full">
+                <button className="w-full bg-pink-600 h-12 text-white rounded-full">
                   Create Account
-                </Button>
-                <Button
+                </button>
+                <button
                   variant="outline"
                   className="w-full text-black h-12 rounded-full"
                 >
                   Sign up with Google
-                </Button>
+                </button>
               </CardFooter>
               <div className="flex justify-center mt-4 text-xs">
                 <p className="text-white">Already have an account?</p>
