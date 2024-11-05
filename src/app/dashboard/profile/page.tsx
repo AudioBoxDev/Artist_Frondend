@@ -2,18 +2,18 @@ import React from "react";
 
 export default function Profile() {
 	return (
-		<section className="w-11/12 mx-auto space-y-4 text-[#A4A4A4]">
+		<section className="space-y-4 text-[#A4A4A4]">
 			<h2 className="text-2xl font-bold">My Profile</h2>
 			<div className=" border-b pb-5 border-[#282325]">
 				<div className=" flex  items-center  justify-between w-11/12 m-auto">
 					<div className="w-24 h-24 rounded-full border ">
 						<img
-							src="https://via.placeholder.com/100" // Replace with profile image URL
+							src="https://via.placeholder.com/100" 
 							alt="Profile"
 							className="w-24 h-24 rounded-full"
 						/>
 					</div>
-					<button className="bg-[#DC143C] text-sm text-[white] px-4 py-2 rounded-full font-bold">
+					<button className="bg-[#DC143C] font-medium text-sm text-[white] px-4 py-2 rounded-full">
 						Edit Profile
 					</button>
 				</div>
@@ -63,7 +63,7 @@ export default function Profile() {
 						placeholder="Reenter Password"
 						className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
 					/>
-					<button className=" w-1/3 bg-[#DC143C] text-white text-sm px-4 py-2 rounded-full font-semibold">
+					<button className=" md:w-1/3 w-1/2 bg-[#DC143C] text-white text-sm px-4 py-2 rounded-full font-semibold">
 						Change Password
 					</button>
 				</div>
@@ -72,7 +72,7 @@ export default function Profile() {
 			<div className="pt-8 space-y-5">
 				<div className=" flex justify-between items-center pb-2 mb-4 border-b border-[#282325]">
 					<h3 className="text-lg font-semibold">Change Wallet Address</h3>
-					<button className="bg-[#DC143C] text-sm text-white px-4 py-2 rounded-full font-semibold">
+					<button className="bg-[#DC143C] text-sm text-white md:px-4 px-2 py-2 rounded-full font-semibold">
 						Connect New Address
 					</button>
 				</div>
@@ -82,7 +82,7 @@ export default function Profile() {
 					className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
 				/>
 
-				<button className=" w-1/3 text-sm bg-[#DC143C] text-white px-4 py-2 rounded-full font-semibold">
+				<button className=" md:w-1/3 w-1/2 text-sm bg-[#DC143C] text-white px-4 py-2 rounded-full font-semibold">
 					Change Address
 				</button>
 			</div>

@@ -26,7 +26,7 @@ ChartJS.register(
 import { Line } from "react-chartjs-2";
 import { Wallet } from "lucide-react";
 
-const Dashboard = () => {
+const Audience = () => {
 	const data = {
 		labels: [
 			"Jan",
@@ -81,11 +81,11 @@ const Dashboard = () => {
 			},
 		},
 	};
-
-	return (
-		<div className="font-roboto min-h-screen text-[#A4A4A4]">
-			<h1 className="text-2xl font-bold mb-6">Welcome</h1>
-			<div className="grid grid-cols-2 text-white lg:grid-cols-4 gap-4 mb-8">
+  return (
+   <>
+   <div className="font-roboto min-h-screen text-[#A4A4A4]">
+			<h1 className="text-2xl font-bold mb-6">Audience Insights</h1>
+			<div className="grid grid-cols-2 text-white lg:grid-cols-3 gap-4 mb-8">
 				<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
 					<div className="p-2 bg-[#1A3F35] rounded-full">
 						<Wallet className=" text-white  h-5 w-5" />
@@ -113,15 +113,7 @@ const Dashboard = () => {
 						<p className="text-lg font-semibold">50,000</p>
 					</div>
 				</div>
-				<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
-					<div className="p-2 bg-[#1A3F35] rounded-full">
-						<Wallet className=" text-white  h-5 w-5" />
-					</div>
-					<div>
-						<p className="text-xs">Balance</p>
-						<p className="text-lg font-semibold">50,000</p>
-					</div>
-				</div>
+				
 			</div>
 
 			<div className="bg-[#100D0F] p-6 rounded-lg mb-8">
@@ -175,7 +167,8 @@ const Dashboard = () => {
 				</div>
 			</div>
 		</div>
-	);
-};
+   </>
+  )
+}
 
-export default Dashboard;
+export default Audience;
