@@ -4,6 +4,7 @@ import React from "react";
 import MusicPlayer from "@/components/MusicPlayer";
 import LeftBar from "@/components/LeftBar";
 import "react-datepicker/dist/react-datepicker.css";
+import { ToastContainer } from "react-toastify";
 
 const Dashboardlayout = ({
 	children,
@@ -27,7 +28,9 @@ const Dashboardlayout = ({
 						<LeftBar />
 					</div>
 				</div>
+				<ToastContainer />
 			</div>
+			
 		</>
 	);
 };

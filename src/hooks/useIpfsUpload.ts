@@ -32,7 +32,8 @@ export const useIpfsUpload = () => {
           pinata_secret_api_key: process.env.NEXT_PUBLIC_PINATA_API_SECRET,
         },
       });
-      return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+      return response.data.IpfsHash;
+      // return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
     } catch (err) {
       console.error('Error uploading file to Pinata:', err);
       setError(err as Error);
@@ -48,7 +49,7 @@ export const useIpfsUpload = () => {
 
     // Ensure that json.songtitle exists and is a valid string
     const defaultSongTitle = generateRandomSongTitle();
-    const songTitle = json.songtitle || defaultSongTitle;
+    const songTitle = json.name || defaultSongTitle;
     const formattedTitle = replaceSpecialCharacters(songTitle);
     console.log("Formatted Title:", formattedTitle);
 
@@ -70,7 +71,8 @@ export const useIpfsUpload = () => {
         });
 
         console.log("Pinata response:", response.data);
-        return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+        // return `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+        return response.data.IpfsHash;
     } catch (err) {
         console.error('Error uploading JSON to Pinata:', err);
         setError(err as Error);
