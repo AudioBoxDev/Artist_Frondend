@@ -6,10 +6,10 @@ import { Input } from "./ui/input";
 const Navbar = () => {
 	return (
 		<>
-			<div className="w-full">
+			<div className="w-full sticky top-0 bg-[#0A0507]">
 				<nav className="items-center font-roboto w-11/12 m-auto text-white py-7 flex justify-between">
 					<div>
-						<ul className="flex gap-9 font-semibold text-gray-400">
+						<ul className="flex gap-9 font-medium text-sm text-gray-400">
 							<Link href="/" className="hover:text-white">
 								<li>Home</li>
 							</Link>

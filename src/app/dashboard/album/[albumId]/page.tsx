@@ -84,7 +84,7 @@ const AlbumId = () => {
       <div className="mt-4 overflow-x-auto">
           <table className="min-w-full text-[#666C6C] border-separate border-spacing-y-2">
             <thead>
-              <tr className="">
+              <tr className="text-sm font-medium">
                 <th className="p-3 text-left">#</th>
                 <th className="p-3 text-left">Songs</th>
                 <th className="p-3 text-center">Streams</th>
@@ -104,14 +104,14 @@ const AlbumId = () => {
                       className="w-12 h-12 rounded-md mr-4"
                     />
                     <div>
-                      <p className="font-semibold">{song.title}</p>
+                      <p className="font-medium text-sm">{song.title}</p>
                       <p className="text-sm text-gray-400">{song.artist}</p>
                     </div>
                   </td>
-                  <td className="p-3 text-center">{song.streams.toLocaleString()}</td>
-                  <td className="p-3 text-center">{song.listeners.toLocaleString()}</td>
-                  <td className="p-3 text-center">{song.saves.toLocaleString()}</td>
-                  <td className="p-3 text-center">{song.released}</td>
+                  <td className="p-3 text-sm font-medium text-center">{song.streams.toLocaleString()}</td>
+                  <td className="p-3 text-sm font-medium text-center">{song.listeners.toLocaleString()}</td>
+                  <td className="p-3 text-sm font-medium text-center">{song.saves.toLocaleString()}</td>
+                  <td className="p-3 text-sm font-medium text-center">{song.released}</td>
                 </tr>
               ))}
             </tbody>

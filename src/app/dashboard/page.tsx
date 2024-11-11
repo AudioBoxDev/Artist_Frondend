@@ -13,7 +13,7 @@ import {
 import song from "/public/images/Rectangle1.png";
 import Image from "next/image";
 
-// Register the necessary components
+
 ChartJS.register(
 	CategoryScale,
 	LinearScale,
@@ -47,8 +47,20 @@ const Dashboard = () => {
 				label: "Page Analytics",
 				data: [200, 300, 280, 400, 450, 480, 500, 450, 400, 470, 430, 490],
 				borderColor: "rgba(32, 201, 151, 0.29)",
-				backgroundColor: "rgba(0, 196, 204, 0.1)",
-				// fill: true,
+				backgroundColor: (context:any) => {
+					const chart = context.chart;
+					const { ctx, chartArea } = chart;
+					if (!chartArea) return null;
+					
+					const gradient = ctx.createLinearGradient(
+					  0, chartArea.bottom, 
+					  0, chartArea.top
+					);
+					gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
+					gradient.addColorStop(1, 'rgba(32, 201, 151, 0.29)');
+					return gradient;
+				  },
+				fill: true,
 				pointRadius: 0,
 				tension: 0.4,
 			},

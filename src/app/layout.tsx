@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Providers from "../context/provider";
 
 
 const geistSans = localFont({
@@ -36,8 +38,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         
+        <Providers>
             {children}
-        
+        </Providers>
       </body>
     </html>
   );

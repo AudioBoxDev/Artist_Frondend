@@ -43,7 +43,7 @@ const LeftBar = () => {
 				<div className="py-4">
 					<Link
 						href="#"
-						className="flex bg-[#FFD700]   text-black text-sm px-7 py-3 rounded-full"
+						className="flex bg-[#FFD700]   text-black text-sm px-4 py-2 rounded-full"
 					>
 						<Gem className="h-4 w-4 mr-3" />
 						Upgrade to Premium

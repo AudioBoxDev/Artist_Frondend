@@ -3,10 +3,6 @@ import Link from "next/link";
 import  { useState } from "react";
 
 const Navbar2 = () => {
-	const [show, setShow] = useState(false);
-
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
 	return (
 		<>
 			<nav className="items-center font-roboto w-11/12 hidden m-auto text-white py-7 md:flex justify-between">
@@ -34,14 +30,12 @@ const Navbar2 = () => {
 						<Link href="/" className="hover:text-white">Support</Link>
 						<Link href="/" className="hover:text-white">Download</Link>
 						<Link
-								href="#"
+								href="/signup"
 								// href="/"
-								onClick={handleShow}
 								className="bg-gradient-to-r from-[#B1198E] to-[#B81A3F] text-white text-sm px-7 py-3 rounded-full"
 							>
 								Sign up
 							</Link>
-							<SignupModal isOpen={show} onClose={handleClose} />
 					</ul>
 				</div>
 			</nav>
