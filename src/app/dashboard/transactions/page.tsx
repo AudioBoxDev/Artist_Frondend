@@ -1,6 +1,16 @@
+"use client"
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function TransactionsHistory() {
+  const router = useRouter();
+
+  const Back=()=>{
+
+      router.push('/dashboard/wallet')
+  
+  }
   const transactions = [
     { id: '#96459761', status: 'IN PROGRESS', date: 'Dec 30, 2019 07:52', type: 'SWAP', action: 'View Details' },
     { id: '#71667167', status: 'COMPLETED', date: 'Dec 7, 2019 23:26', type: 'Withdrawal', action: 'View Details' },
@@ -26,11 +36,17 @@ export default function TransactionsHistory() {
 
   return (
     <div className=" font-roboto text-[#ABABAB]  ">
-      <h2 className="text-2xl border-b border-gray-700 pb-4 font-bold mb-4">Transactions History</h2>
+      <button
+						onClick={Back}
+						className="text-gray-400 flex items-center gap-2 hover:text-gray-200 mb-4"
+					>
+						<ArrowLeft size={14}/> back
+					</button>
+      <h2 className="text-2xl border-b border-[#151515] pb-4 font-bold mb-4">Transactions History</h2>
       <div className="bg-[#0E0B0E] p-4 rounded-lg overflow-x-auto text-sm ">
         <table className="min-w-full text-sm text-left">
           <thead>
-            <tr className="border-b border-gray-700">
+            <tr className="border-b border-[#151515]">
               <th className="py-4 px-4">ID</th>
               <th className="py-4 px-4">STATUS</th>
               <th className="py-4 px-4">DATE</th>

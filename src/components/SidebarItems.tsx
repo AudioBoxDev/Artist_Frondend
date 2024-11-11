@@ -10,7 +10,7 @@ const SidebarItems = ({ icon: Icon, label, to, isActive }:any) => {
         }`}>
      <Link href={`${to}`} className='flex space-x-3 tems-center'>
       <Icon className="w-4 h-4" />
-      <span className='font-roboto text-base font-normal leading-[18.75px] text-left'>{label}</span>
+      <span className='font-roboto text-sm font-normal leading-[18.75px] text-left'>{label}</span>
     </Link>
     </div>
   )

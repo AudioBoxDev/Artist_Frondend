@@ -8,7 +8,7 @@ import Rectangle3 from "/public/images/Rectangle3.png";
 import Rectangle4 from "/public/images/Rectangle4.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart } from "lucide-react";
+import { Heart, MessageCircle, Users } from "lucide-react";
 
 const AlbumPage = () => {
   const router = useRouter();
@@ -95,12 +95,12 @@ const AlbumPage = () => {
 		<div className=" font-roboto">
 			<div className="bg-gradient-to-r from-[#4B0B3E] to-[#274749] p-8 rounded-lg text-white flex items-center justify-between">
 				<div className="flex-1">
-					<h1 className="text-4xl font-bold">Album Name</h1>
+					<h1 className="text-4xl font-bold">Artist Name</h1>
 
 					<div className=" grid grid-flow-col gap-2 w-2/5 mt-3">
-						<span className="text-xs">1,020 Fans</span>
-						<span className="text-xs">1,020 Albums</span>
-            <span className="flex gap-2 text-xs "><Heart size={14}/> 1,020</span>
+						<span className="flex gap-2 text-xs"><MessageCircle size={15}/> 1020 </span>
+						<span className="flex gap-2 text-xs"><Users size={15}/> 1020</span>
+            <span className="flex gap-2 text-xs "><Heart size={15}/> 1,020</span>
 					</div>
 				</div>
 				<div className="flex-shrink-0">
