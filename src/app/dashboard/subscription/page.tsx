@@ -29,12 +29,12 @@ export default function Subscription() {
           <p className="text-sm text-white">Get all access and an extra 15% off when you subscribe annually</p>
 
           <p className='mt-3  text-sm text-[#606060]'>Choose Subscription Plan</p>
-          <div className="flex justify-between mt-4 space-x-2">
+          <div className="grid gap-5 grid-cols-3 mt-4">
             {['Monthly', 'Quarterly', 'Annually'].map((plan, index) => (
               <div
                 key={index}
                 onClick={() => setSelectedPlan(plan)}
-                className={`flex-1 cursor-pointer p-4 rounded-md border bg-[#FDFDFD14] ${
+                className={`md:col-span-1 col-span-3 cursor-pointer p-4 rounded-md border bg-[#FDFDFD14] ${
                   selectedPlan === plan ? 'border-pink-600 ' : 'border-none'
                 }`}
               >

@@ -1,7 +1,9 @@
+"use client"
 import Link from 'next/link'
 import React from 'react'
 
 const SidebarItems = ({ icon: Icon, label, to, isActive }:any) => {
+  
   return (
    
     <div 
