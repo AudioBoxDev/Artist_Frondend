@@ -1,4 +1,3 @@
-import SignupModal from "@/app/(auth)/signup/page";
 import Link from "next/link";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { useEffect, useState } from "react";
@@ -17,11 +16,11 @@ const Navbar2 = () => {
 	const [message, setMessage] = useState(null);
 
 
-	useEffect(() => {
-        if (isConnected && !token) {
-            signMessage();
-        }
-    }, [isConnected]);
+	// useEffect(() => {
+    //     if (isConnected && !token) {
+    //         signMessage();
+    //     }
+    // }, [isConnected]);
 
 
 	const signMessage = async () => {
