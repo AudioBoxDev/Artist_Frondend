@@ -42,7 +42,7 @@ const AlbumPage = () => {
 			{
 				breakpoint: 480,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 					slidesToScroll: 1,
 				},
 			},
@@ -134,12 +134,12 @@ const AlbumPage = () => {
 											alt={item.title}
 											width={180}
 											height={200}
-											className="w-40 rounded-full  h-40 object-cover"
+											className="md:w-40 w-32 rounded-full  md:h-40 h-32 object-cover"
 										/>
 									</div>
 									<div className="p-4 text-center">
-										<h3 className="text-lg font-semibold">{item.title}</h3>
-										<p className="text-sm text-gray-400">{item.artist}</p>
+										<h3 className="md:text-lg text-base font-semibold">{item.title}</h3>
+										<p className="md:text-sm text-xs text-gray-400">{item.artist}</p>
 									</div>
 								</div>
 							</div>

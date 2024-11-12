@@ -4,10 +4,10 @@ import Image from 'next/image';
 
 const AnalyticsDashboardSection = () => {
   return (
-    <div className="bg-gradient-to-b w-11/12 mx-auto rounded-3xl from-[#394B5E1F] to-[#2A313D24] font-roboto text-[#DACFD3] my-16 py-32 px-16">
+    <div className="bg-gradient-to-b z-10 w-11/12 mx-auto rounded-3xl from-[#394B5E1F] to-[#2A313D24] font-roboto text-[#DACFD3] my-16 md:py-32 py-16 md:px-16 px-6">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10">
         <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <h2 className="text-5xl font-semibold mb-6">Revenue and Analytics Dashboard</h2>
+          <h2 className="md:text-5xl text-3xl font-semibold mb-6">Revenue and Analytics Dashboard</h2>
           <div className="mb-8">
             <h3 className="text-xl text-white font-semibold mb-2">Real-Time Insights</h3>
             <p className="text-gray-300">
