@@ -32,10 +32,11 @@ export default function Home() {
         </h1>
         <div className="mt-9 flex items-center justify-center">
 
-        <Link href="/login" className="bg-gradient-to-r from-[#B1198E] to-[#B81A3F] text-white text-sm px-7 py-4 rounded-full">Start Listening</Link>
+        <Link href="/dashboard" className="bg-gradient-to-r from-[#B1198E] to-[#B81A3F] text-white text-sm px-7 py-4 rounded-full">Start Listening</Link>
         </div>
       </div>
     </div>
+    
     <Footer/>
   </>
     

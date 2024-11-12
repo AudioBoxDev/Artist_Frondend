@@ -4,57 +4,59 @@ import { useEffect, useState } from "react";
 import { ConnectBtn } from "./ConnectBtn";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import AvatarDropdown from "./Dropdown";
 
 const url = "https://theaudiobox-backend.onrender.com";
 
 const Navbar2 = () => {
 	const { address, isConnected } = useAccount();
-	const { disconnect } = useDisconnect();
 	const { signMessageAsync } = useSignMessage();
 
 	const [token, setToken] = useState(null);
 	const [message, setMessage] = useState(null);
 
-
-	// useEffect(() => {
-    //     if (isConnected && !token) {
-    //         signMessage();
-    //     }
-    // }, [isConnected]);
-
+	useEffect(() => {
+		if (isConnected) {
+			signMessage();
+		}
+	}, [isConnected, token]);
 
 	const signMessage = async () => {
 		if (!isConnected) return alert("Please connect your wallet first");
 
-		const messageToSign:any = `Sign this message to authenticate. Timestamp: ${new Date().toISOString()}`;
+		const messageToSign: any = `Welcome to AudioBlocks! Sign this message to verify your wallet and unlock a world of decentralized music. Timestamp: ${new Date().toISOString()}`;
+
 		setMessage(messageToSign);
 
 		try {
 			const signature = await signMessageAsync({ message: messageToSign });
-			authenticateUser(address, signature, messageToSign);
+			authenticateUser(address, signature, messageToSign, "artist");
 		} catch (error) {
 			console.error("Message signing failed:", error);
-			alert("Message signing failed");
+			toast.error("Message signing failed");
 		}
 	};
 
-	const authenticateUser = async (address:any, signature:any, message:any) => {
+	const authenticateUser = async (
+		address: any,
+		signature: any,
+		message: any,
+		role: any,
+	) => {
 		try {
-			
-			const response = await axios.post(
-				`${url}/wallet/auth/verify_signature`,
-				{
-					address,
-					signature,
-					message,
-					role: "admin",
-				},
-			);
+			const response = await axios.post(`${url}/wallet/auth/verify_signature`, {
+				address: address,
+				signature: signature,
+				message: message,
+				role: role,
+			});
 			setToken(response.data.token);
-			toast.success("Authentication successful!");
-		} catch (error) {
+			Cookies.set("audioblocks_jwt", response.data.token, { expires: 30 });
+			toast.success(response.data.message || "Authentication successful!");
+		} catch (error: any) {
+			toast.error(error.response.data.message || "Authentication failed!");
 			console.error("Authentication failed:", error);
-			toast.error("Authentication failed!");
 		}
 	};
 	return (
@@ -67,7 +69,7 @@ const Navbar2 = () => {
 							AudioBlocks
 						</h1>
 					</Link>
-					<div className="md:block hidden">
+					{/* <div className="md:block hidden">
 						<ul className="flex gap-9 font-semibold text-gray-400">
 							<Link href="/" className="hover:text-white">
 								<li>Streams</li>
@@ -79,7 +81,7 @@ const Navbar2 = () => {
 								<li>Marketplace</li>
 							</Link>
 						</ul>
-					</div>
+					</div> */}
 				</div>
 				<div className=" ">
 					<ul className="flex items-center font-semibold text-gray-400 gap-5">
@@ -89,7 +91,7 @@ const Navbar2 = () => {
 						<Link href="/" className="hover:text-white md:block hidden">
 							Download
 						</Link>
-						<ConnectBtn />
+						<div>{isConnected ? <AvatarDropdown /> : <ConnectBtn />}</div>
 					</ul>
 				</div>
 			</nav>
