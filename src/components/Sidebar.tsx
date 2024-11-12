@@ -14,10 +14,19 @@ import {
 	ArrowBigLeft,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useDisconnect } from "wagmi";
 
 const Sidebar = ({ isOpen, toggleClose }: any) => {
 	const pathname = usePathname();
+	const route = useRouter();
+	const { disconnect } = useDisconnect();
+
+	const disconnectWallet = () => {
+		disconnect();
+		route.push( "/" );
+	};
+
 	return (
 		<>
 			{isOpen && (
@@ -100,7 +109,10 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 							to="/dashboard/profile"
 							isActive={pathname === "/dashboard/profile"}
 						/>
-						<SidebarItems icon={PowerIcon} label="Log Out" to="/dashboard" />
+						<div  onClick={disconnectWallet} >
+
+						<SidebarItems icon={PowerIcon} label="Log Out" to="#" />
+						</div>
 					</div>
 				</nav>
 			</div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import MacBookAir from "/public/images/MacBookAir.png"
 import Image from 'next/image';
+import Link from 'next/link';
+
 
 const FanEngagementSection = () => {
   return (
@@ -18,9 +20,14 @@ const FanEngagementSection = () => {
           <p className="text-gray-400 mb-8">
             Bring fans closer with exclusive releases and collectible music NFTs, making every interaction a unique part of your journey.
           </p>
-          <button className="bg-traparent border border-[#52C9DE] hover:bg-teal-400 text-white font-bold py-3 px-9 rounded-full transition duration-300">
-            GET STARTED
-          </button>
+          
+            <Link
+								href="/dashboard"
+								className="bg-gradient-to-r from-[#B1198E] p-1 to-[#B81A3F] text-white text-sm px-8 py-3 rounded-3xl"
+							>
+								Get Started
+							</Link>
+       
         </div>
       </div>
     </div>

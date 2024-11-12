@@ -3,8 +3,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Providers from "../context/provider";
+import { ToastContainer } from "react-toastify";
 
 
 const geistSans = localFont({
@@ -41,6 +43,7 @@ export default function RootLayout({
         <Providers>
             {children}
         </Providers>
+        <ToastContainer />
       </body>
     </html>
   );

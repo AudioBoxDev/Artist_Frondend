@@ -1,7 +1,8 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { createConfig, http } from 'wagmi'
-import { injected, metaMask, safe, walletConnect  } from 'wagmi/connectors'
+import { injected, metaMask, safe, walletConnect  } from '@wagmi/connectors'
 import {
+  mainnet,
     polygon,
     optimism,
     lisk,
@@ -17,13 +18,15 @@ import {
   const projectId:any = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 
 export const config = createConfig({
-    chains: [liskSepolia, lisk, polygon, optimism],
-    connectors: [injected(), metaMask(), safe(), walletConnect({ projectId }),],
+    chains: [liskSepolia, lisk, polygon,mainnet, optimism],
+    connectors: [injected(), walletConnect({ projectId }),],
     transports: {
       [lisk.id]: http(),
       [polygon.id]: http(),
+      [mainnet.id]: http(),
       [optimism.id]: http(),
       [liskSepolia.id]: http(),
     },
     ssr : true
 });
+
