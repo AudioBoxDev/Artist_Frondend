@@ -20,7 +20,7 @@ export interface Song {
   title: string;
   artist: string;
   src: string;
-  coverImage: string;
+  coverImage: any;
   streams: number;
   listeners: number;
   saves: number;
