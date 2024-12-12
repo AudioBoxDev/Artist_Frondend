@@ -7,8 +7,20 @@ import Link from "next/link";
 import Faq from "@/components/Faq";
 import FanEngagementSection from "@/components/FanEngagementSection";
 import AnalyticsDashboardSection from "@/components/AnalyticsDashboardSection";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
+import {useRouter} from "next/navigation" 
 
 export default function Home() {
+  const {artistProfileDetails} =  uploadProfileDetails();
+	const router =useRouter();
+
+	const getStarted=()=>{
+		if(artistProfileDetails){
+			router.push("/dashboard")
+		}else{
+			router.push("/dashboard/profile")
+		}
+	}
   return (
   <>
     <Navbar2/>
@@ -32,7 +44,8 @@ export default function Home() {
         </h1>
         <div className="mt-9 flex items-center justify-center">
 
-        <Link href="/dashboard" className="bg-gradient-to-r from-[#B1198E] to-[#B81A3F] text-white text-sm px-7 py-4 rounded-full">Start Listening</Link>
+        <button
+								onClick={getStarted} className="bg-gradient-to-r from-[#B1198E] to-[#B81A3F] text-white text-sm px-7 py-4 rounded-full">Get Started</button>
         </div>
       </div>
     </div>

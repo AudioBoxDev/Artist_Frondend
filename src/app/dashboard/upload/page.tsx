@@ -7,6 +7,31 @@ import { isValid } from "react-datepicker/dist/date_utils";
 import Alert from "../../../components/Alert"; // Import the Alert component
 import { replaceSpecialCharacters } from "@/lib/helper";
 import { toast } from "react-toastify";
+import * as z from "zod";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
+
+const AddMusicSchema = z.object({
+	title: z.string().min(3, "Title must be at least 3 characters long."),
+	genre: z.string().nonempty("Genre is required."),
+	composers: z.string().nonempty("Composers are required."),
+	audioFile: z
+		.instanceof(File)
+		.refine(
+			(file) => ["audio/mpeg", "audio/wav", "audio/mp3"].includes(file.type),
+			{ message: "Audio file must be in .mp3, .wav, or .mpeg format." },
+		),
+	artFile: z.instanceof(File, { message: "Art file is required." }),
+	description: z
+		.string()
+		.min(10, "Description must be at least 10 characters."),
+	releaseDate: z.date().refine((date) => !isNaN(date.getTime()), {
+		message: "Valid release date is required.",
+	}),
+});
+
+type AddMusicFormInputs = z.infer<typeof AddMusicSchema>;
 
 const AddMusicForm = () => {
 	const [releaseDate, setReleaseDate] = useState(new Date());
@@ -18,12 +43,14 @@ const AddMusicForm = () => {
 
 	const [description, setDescription] = useState("");
 	const [composers, setComposers] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
+	const [progress, setProgress]  =  useState<number | null>(null);
 
-	const [errors, setErrors] = useState<Record<string, string>>({});
-	const [submited, setSubmitted] = useState(false);
+	// const [errors, setErrors] = useState<Record<string, string>>({});
 
-	const { pinFileToIpfs, pinJsonToIpfs, loading, error } = useIpfsUpload();
+	const { pinFileToIpfs, uploadSongToBackend, writeToContract, pinJsonToIpfs, loading, error } =
+		useIpfsUpload();
+		const {artistProfileDetails} =  uploadProfileDetails();
 
 	const handleArtFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -38,141 +65,164 @@ const AddMusicForm = () => {
 		}
 	};
 
+	const {
+		register,
+		handleSubmit,
+		control,
+		formState: { errors },
+	} = useForm<AddMusicFormInputs>({
+		resolver: zodResolver(AddMusicSchema),
+	});
+
 	const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		console.log("File selected:", file); // Log the selected file object
 		if (file) {
 			setAudioFile(file);
+
+			const audio = new Audio(URL.createObjectURL(file));
+
+			// Listen for metadata to be loaded
+			audio.addEventListener("loadedmetadata", () => {
+				console.log(`Duration: ${audio.duration} seconds`);
+			});
 		}
 	};
 
-	const dismissError = (field: string) => {
-		setErrors((prevErrors) => {
-			const newErrors = { ...prevErrors };
-			delete newErrors[field];
-			return newErrors;
-		});
-	};
+	// const dismissError = (field: string) => {
+	// 	setErrors((prevErrors) => {
+	// 		const newErrors = { ...prevErrors };
+	// 		delete newErrors[field];
+	// 		return newErrors;
+	// 	});
+	// };
 
-	const handleSubmit = async (e: any) => {
+	const onSubmit = async (e: any) => {
 		e.preventDefault();
-		console.log("Submit Clicked");
+		setIsUploading(true);
+		try {
+			setProgress(0);
+			// const validateFields = () => {
+			// 	let isValid = true;
+			// 	const newErrors: Record<string, string> = {};
 
-		const validateFields = () => {
-			let isValid = true;
-			const newErrors: Record<string, string> = {};
+			// 	// Title Validation
+			// 	if (!title) {
+			// 		newErrors.title = "Title is required.";
+			// 		isValid = false;
+			// 	} else if (title.length < 3) {
+			// 		newErrors.title = "Title must be at least 3 characters long.";
+			// 		isValid = false;
+			// 	}
 
-			// Title Validation
-			if (!title) {
-				newErrors.title = "Title is required.";
-				isValid = false;
-			} else if (title.length < 3) {
-				newErrors.title = "Title must be at least 3 characters long.";
-				isValid = false;
-			}
+			// 	// Genre Validation
+			// 	if (!genre) {
+			// 		newErrors.genre = "Genre is required.";
+			// 		isValid = false;
+			// 	}
 
-			// Genre Validation
-			if (!genre) {
-				newErrors.genre = "Genre is required.";
-				isValid = false;
-			}
+			// 	// Audio File Validation
+			// 	if (!audioFile) {
+			// 		newErrors.audioFile = "Audio file is required.";
+			// 		isValid = false;
+			// 	} else if (
+			// 		!["audio/mpeg", "audio/wav", "audio/mp3"].includes(audioFile.type)
+			// 	) {
+			// 		console.log("Audio File MIME Type:", audioFile.type); // Log the MIME type
+			// 		console.log("Audio File Name:", audioFile.name);
+			// 		newErrors.audioFile = "Audio file must be in .mp3 or .wav format.";
+			// 		isValid = false;
+			// 	}
 
-			// Audio File Validation
-			if (!audioFile) {
-				newErrors.audioFile = "Audio file is required.";
-				isValid = false;
-			} else if (
-				!["audio/mpeg", "audio/wav", "audio/mp3"].includes(audioFile.type)
-			) {
-				console.log("Audio File MIME Type:", audioFile.type); // Log the MIME type
-				console.log("Audio File Name:", audioFile.name);
-				newErrors.audioFile = "Audio file must be in .mp3 or .wav format.";
-				isValid = false;
-			}
+			// 	// Art File Validation
+			// 	if (!artFile) {
+			// 		newErrors.artFile = "Art file is required.";
+			// 		isValid = false;
+			// 	}
 
-			// Art File Validation
-			if (!artFile) {
-				newErrors.artFile = "Art file is required.";
-				isValid = false;
-			}
+			// 	// Description Validation
+			// 	if (!description) {
+			// 		newErrors.description = "Description is required.";
+			// 		isValid = false;
+			// 	} else if (description.length < 10) {
+			// 		newErrors.description =
+			// 			"Description must be at least 10 characters long.";
+			// 		isValid = false;
+			// 	}
 
-			// Description Validation
-			if (!description) {
-				newErrors.description = "Description is required.";
-				isValid = false;
-			} else if (description.length < 10) {
-				newErrors.description =
-					"Description must be at least 10 characters long.";
-				isValid = false;
-			}
+			// 	// Release Date Validation
+			// 	if (
+			// 		!releaseDate ||
+			// 		!(releaseDate instanceof Date) ||
+			// 		isNaN(releaseDate.getTime())
+			// 	) {
+			// 		newErrors.releaseDate = "Valid release date is required.";
+			// 		isValid = false;
+			// 	}
+			// 	// setErrors(newErrors);
+			// 	return isValid;
+			// };
 
-			// Release Date Validation
-			if (
-				!releaseDate ||
-				!(releaseDate instanceof Date) ||
-				isNaN(releaseDate.getTime())
-			) {
-				newErrors.releaseDate = "Valid release date is required.";
-				isValid = false;
-			}
-			setErrors(newErrors);
-			return isValid;
-		};
+			
 
-		setIsLoading(true);
+			// if (!validateFields()) {
+			// 	setIsLoading(false);
+			// 	return;
+			// }
 
-		if (!validateFields()) {
-			setIsLoading(false);
-			return;
+			const songHash = await pinFileToIpfs(audioFile!, setProgress);
+			const coverArtHash = await pinFileToIpfs(artFile!, setProgress);
+			console.log(songHash);
+			const artistName = artistProfileDetails?.fullName;
+			const metadata = {
+				name: replaceSpecialCharacters(title) || "Default-Name",
+				description: description || "No description provided.",
+				image: `ipfs://${coverArtHash}`,
+				animation_url: `ipfs://${songHash}`, // Use this field for audio files (optional)
+				attributes: [
+					{ trait_type: "Genre", value: genre },
+					{ trait_type: "Release Date", value: releaseDate },
+					{ trait_type: "Artist Name", value: artistName || "" },
+					{ trait_type: "Album Name", value: "" },
+					{ trait_type: "Song Title", value: title },
+					{ trait_type: "Composers", value: composers || "" },
+					{ trait_type: "description", value: description || "" },
+				],
+				external_urls: {
+					likes: `https://yourplatform.com/like/${songHash}`, // External links for dynamic data
+					streams: `https://yourplatform.com/streams/${songHash}`,
+				},
+				data: {
+					songUrl: `ipfs://${songHash}`,
+					coverArtUrl: `ipfs://${coverArtHash}`,
+				},
+			};
+			// Upload metadata JSON to IPFS using Pinata
+			const metadatahash = await pinJsonToIpfs(metadata);
+			const songDetails = {
+				title: title,
+				songId: 12345,
+				description: description,
+				songCid: `ipfs://${songHash}`,
+				metadataCID: metadatahash,
+				artistName: artistName,
+				genreId: "649f2b1832c3e3f2d9b45f0b",
+				durationInSec: 180,
+				coverImage: `ipfs://${coverArtHash}`,
+				releaseDate: releaseDate,
+				composers: composers,
+			  };
+			//Smart Contract Intereaction Comes Here.
+			uploadSongToBackend(songDetails);
+			writeToContract(metadatahash);
+			setIsUploading(false);
+			// setSubmitted(true);
+			// toast.success("Song Uploaded Successful");
+		} catch (error: any) {
+			setProgress(null);
+			setIsUploading(false);
+			toast.error(error.message);
+			console.log(error.message);
 		}
-
-		console.log("Audio File Name:", audioFile?.name); // This should now work if audioFile is correctly set
-
-		const data = {
-			title,
-			genre,
-			audioFile,
-			artFile,
-			description,
-			composers,
-			releaseDate,
-		};
-
-		const songHash = await pinFileToIpfs(audioFile!);
-		const coverArtHash = await pinFileToIpfs(artFile!);
-		console.log(songHash);
-		const artistName = "";
-		const metadata = {
-			name: replaceSpecialCharacters(title) || "Default-Name",
-			description: description || "No description provided.",
-			image: `ipfs://${coverArtHash}`,
-			animation_url: `ipfs://${songHash}`, // Use this field for audio files (optional)
-			attributes: [
-				{ trait_type: "Genre", value: genre },
-				{ trait_type: "Release Date", value: releaseDate },
-				{ trait_type: "Artist Name", value: artistName || "" },
-				{ trait_type: "Album Name", value: "" },
-				{ trait_type: "Song Title", value: title },
-				{ trait_type: "Composers", value: composers || "" },
-				{ trait_type: "description", value: description || "" },
-			],
-			external_urls: {
-				likes: `https://yourplatform.com/like/${songHash}`, // External links for dynamic data
-				streams: `https://yourplatform.com/streams/${songHash}`,
-			},
-			data: {
-				songUrl: `ipfs://${songHash}`,
-				coverArtUrl: `ipfs://${coverArtHash}`,
-			},
-		};
-		// Upload metadata JSON to IPFS using Pinata
-		const metadatahash = await pinJsonToIpfs(metadata);
-		console.log(metadatahash);
-		//Smart Contract Intereaction Comes Here.
-		setIsLoading(false);
-		setSubmitted(true);
-		toast.success("Song Uploaded Successful");
-
 		// setReleaseDate(new Date)
 		// setTitle("")
 		// setGenre("")
@@ -188,12 +238,12 @@ const AddMusicForm = () => {
 	return (
 		<div className=" m-auto flex mb-12 font-roboto rounded-xl p-5  items-center justify-center  bg-[#0E0B0E] text-[#A4A4A4]">
 			<div>
-				{submited ? (
+				{/* {submited ? (
 					<Alert
 						key={"01"}
 						message={"Song Uploaded Successfully"}
 						type="success"
-						onDismiss={() => dismissError("01")}
+						// onDismiss={() => dismissError("01")}
 					/>
 				) : (
 					""
@@ -205,8 +255,8 @@ const AddMusicForm = () => {
 						type="error"
 						onDismiss={() => dismissError(field)}
 					/>
-				))}
-				<form className="space-y-6 mb-5">
+				))} */}
+				<form  onSubmit={onSubmit} className="space-y-6 mb-5">
 					<div className="flex md:flex-row flex-col md:items-center justify-between">
 						<h2 className="md:text-3xl text-xl font-bold mb-6">Add Music</h2>
 						<div className="grid items-center gap-3 grid-cols-2">
@@ -214,6 +264,7 @@ const AddMusicForm = () => {
 								Upload Art
 								<input
 									type="file"
+									// {...register("artFile")}
 									onChange={handleArtFileChange}
 									className="hidden"
 									accept="image/*"
@@ -231,6 +282,9 @@ const AddMusicForm = () => {
 							</div>
 						</div>
 					</div>
+					{/* {errors.artFile && (
+						<p className="text-red-500">{errors.artFile.message}</p>
+					)} */}
 					<div className="grid md:grid-cols-2 gap-10">
 						<div>
 							<label className="block text-sm font-normal mb-1" htmlFor="album">
@@ -238,13 +292,16 @@ const AddMusicForm = () => {
 							</label>
 							<input
 								type="text"
+								{...register("title")}
 								id="album"
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
 								placeholder="Song Title"
 								className="w-full bg-transparent placeholder:text-[#565656] placeholder:text-sm rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:border-[#FF9393]"
-								required
 							/>
+							{errors.title && (
+								<p className="text-red-500">{errors.title.message}</p>
+							)}
 						</div>
 						<div>
 							<label
@@ -256,47 +313,77 @@ const AddMusicForm = () => {
 							<input
 								type="text"
 								id="compose"
+								{...register("composers")}
 								value={composers}
 								onChange={(e: any) => setComposers(e.target.value)}
 								placeholder="separate with coma"
 								className="w-full bg-transparent  placeholder:text-sm placeholder:text-[#565656] rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:border-[#FF9393]"
-								required
 							/>
+							{errors.composers && (
+								<p className="text-red-500">{errors.composers.message}</p>
+							)}
 						</div>
-						
 					</div>
 
 					<div className="grid md:grid-cols-3 gap-5">
-						
 						<div>
 							<label className="block text-sm font-normal mb-1" htmlFor="genre">
 								Genre <span className="text-red-500">*</span>
 							</label>
 							<select
 								id="genre"
+								{...register("genre")}
 								value={genre}
 								onChange={(e) => setGenre(e.target.value)}
 								className="w-full bg-transparent placeholder:text-[#565656] placeholder:text-sm rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:border-[#FF9393]"
 								required
-								
 							>
 								<option value="" className="bg-black text-white" disabled>
 									Select Genre
 								</option>
-								<option className="bg-[#0E0B0E] text-white" value="Pop">Pop</option>
-								<option className="bg-[#0E0B0E] text-white" value="Rock">Rock</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Jazz">Jazz</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Hip-Hop">Hip-Hop</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Classical">Classical</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Electronic">Electronic</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Country">Country</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Reggae">Reggae</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Blues">Blues</option>
-								<option className="bg-[#0E0B0E] text-white"  value="R&B">R&B</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Soul">Soul</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Folk">Folk</option>
-								<option className="bg-[#0E0B0E] text-white"  value="Metal">Metal</option>
+								<option className="bg-[#0E0B0E] text-white" value="Pop">
+									Pop
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Rock">
+									Rock
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Jazz">
+									Jazz
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Christian">
+									Christian
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Classical">
+									Classical
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Electronic">
+									Electronic
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Country">
+									Country
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Reggae">
+									Reggae
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Blues">
+									Blues
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="R&B">
+									R&B
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Soul">
+									Soul
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Folk">
+									Folk
+								</option>
+								<option className="bg-[#0E0B0E] text-white" value="Metal">
+									Metal
+								</option>
 							</select>
+							{errors.genre && (
+								<p className="text-red-500">{errors.genre.message}</p>
+							)}
 						</div>
 						<div>
 							<label
@@ -305,13 +392,29 @@ const AddMusicForm = () => {
 							>
 								Release Date <span className="text-red-500">*</span>
 							</label>
-							<DatePicker
+							<Controller
+								name="releaseDate"
+								control={control}
+								render={({ field }) => (
+									<DatePicker
+										// {...field}
+										id="releaseDate"
+										selected={field.value}
+										onChange={(date) => field.onChange(date)}
+										className="w-full bg-transparent text-sm  placeholder:text-[#565656]  placeholder:text-sm  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:border-[#FF9393]"
+									/>
+								)}
+							/>
+							{/* <DatePicker
 								id="releaseDate"
 								className="w-full bg-transparent text-sm  placeholder:text-[#565656]  placeholder:text-sm  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:border-[#FF9393]"
-								required
+								
 								selected={releaseDate}
 								onChange={(date: any) => setReleaseDate(date)}
-							/>
+							/> */}
+							{errors.releaseDate && (
+								<p className="text-red-500">{errors.releaseDate.message}</p>
+							)}
 						</div>
 
 						<div>
@@ -330,14 +433,42 @@ const AddMusicForm = () => {
 									Select File
 									<input
 										type="file"
+										// {...register("audioFile")}
 										onChange={handleAudioFileChange}
 										className="hidden"
 										accept="audio/*"
 									/>
 								</label>
 							</div>
+							{/* {errors.audioFile && (
+								<p className="text-red-500">{errors.audioFile.message}</p>
+							)} */}
 						</div>
 					</div>
+
+					{/* Progress Bar */}
+					{/* {isUploading && (
+						<div className="w-full bg-gray-800 rounded-full h-2.5">
+							<div
+								className="bg-[#DC143C] h-2.5 rounded-full transition-all"
+								style={{ width: `${uploadProgress}%` }}
+							></div>
+							<p className="text-xs text-white mt-1">{uploadProgress}%</p>
+						</div>
+					)} */}
+					{progress !== null && (
+						<div>
+							<p>Uploading: {progress}%</p>
+							<div className="rounded-lg" style={{ width: "100%", background: "#ccc" }}>
+								<div className="bg-pink-700 rounded-lg"
+									style={{
+										width: `${progress}%`,
+										height: "10px",
+									}}
+								></div>
+							</div>
+						</div>
+					)}
 
 					<div>
 						<label
@@ -347,33 +478,32 @@ const AddMusicForm = () => {
 							Description <span className="text-red-500">*</span>
 						</label>
 						<textarea
-							name="description"
 							id="description"
+							{...register("description")}
 							value={description}
 							onChange={(e: any) => setDescription(e.target.value)}
 							rows={10}
 							placeholder="Description of music"
 							className="w-full bg-transparent  placeholder:text-sm  placeholder:text-[#565656]  rounded-2xl border border-[#282325] px-3 py-1 text-white focus:outline-none focus:shadow-sm focus:border-[#FF9393]"
-							required
 						></textarea>
+						{errors.description && (
+							<p className="text-red-500">{errors.description.message}</p>
+						)}
 					</div>
 
-					{isLoading ? (
-						<button
-							type="button"
-							className="md:w-1/5 w-full bg-[#DC143C] hover:bg-pink-600 text-white font-medium py-2 rounded-full"
-						>
-							loading...
-						</button>
-					) : (
-						<button
-							type="submit"
-							onClick={handleSubmit}
-							className="md:w-1/5 w-full bg-[#DC143C] hover:bg-pink-600 text-white font-medium py-2 rounded-full"
-						>
-							Upload Music
-						</button>
-					)}
+					<button
+						type="submit"
+						className="md:w-1/5 w-full bg-[#DC143C] hover:bg-pink-600 text-white font-medium py-2 rounded-full"
+					>
+						{isUploading ? (
+							<div className="relative w-5 h-5 m-auto">
+								<div className="absolute inset-0 border-2 border-blue-100 rounded-full animate-spin-slow"></div>
+								<div className="absolute inset-0 border-2 border-pink-900 border-t-transparent rounded-full animate-spin"></div>
+							</div>
+						) : (
+							"Upload Music"
+						)}
+					</button>
 				</form>
 			</div>
 		</div>

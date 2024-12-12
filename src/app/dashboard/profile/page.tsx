@@ -1,90 +1,351 @@
-import React from "react";
+"use client";
+import { Pen, Pencil } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Twitter, Facebook } from "lucide-react";
+import { useAccount } from "wagmi";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 
 export default function Profile() {
+	const [isEditing, setIsEditing] = useState(false);
+	const { address } = useAccount();
+	const url = process.env.NEXT_PUBLIC_API_URL;
+	const {
+		createGroup,
+		artistProfileDetails,
+		uploadProfile,
+		fetchProfileDetails,
+		uploadProfilePicture,
+		writeToContract,
+	} = uploadProfileDetails();
+	const [profileDetails, setProfileDetails] = useState<any>({
+		fullName: "",
+		bio: "",
+		genre: "",
+		location: "",
+		nationality: "",
+		twitter: "",
+		facebook: "",
+		instagram: "",
+		walletAddress: address,
+		profilePic: "https://via.placeholder.com/10",
+	});
+	const [profilePic, setProfilePic] = useState<File | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleInputChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+		field: string,
+	) => {
+		setProfileDetails((prevState: any) => ({
+			...prevState,
+			[field]: e.target.value,
+		}));
+	};
+
+	useEffect(() => {
+		async function fetchProfile() {
+			try {
+				setProfileDetails((prevState: any) => ({
+					...prevState,
+					...artistProfileDetails,
+					profilePic: artistProfileDetails?.profilePicture?.replace(
+						"ipfs://",
+						`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+					),
+					walletAddress: address, // Ensure wallet address is correct
+				}));
+			} catch (error) {
+				console.error("Failed to fetch profile details", error);
+			}
+		}
+
+		fetchProfile();
+	}, [address, artistProfileDetails]);
+
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			setProfilePic(e.target.files[0]);
+			const file = URL.createObjectURL(e.target.files[0]);
+			setProfileDetails((prevState: any) => ({
+				...prevState,
+				profilePic: file,
+			}));
+		}
+	};
+
+	const toggleEditMode = () => {
+		setIsEditing(!isEditing);
+	};
+
+	const handleSaveInfo = async (e: any) => {
+		e.preventDefault();
+		setIsLoading(true);
+		try {
+			await createGroup();
+			const pictureHash = await uploadProfilePicture(profilePic!);
+
+			const metadata = {
+				fullName: profileDetails.fullName,
+				bio: profileDetails.bio,
+				genre: profileDetails.genre,
+				location: profileDetails.location,
+				nationality: profileDetails.nationality,
+				twitter: profileDetails.twitter,
+				facebook: profileDetails.facebook,
+				instagram: profileDetails.instagram,
+				profilePicture: `ipfs://${pictureHash}`,
+			};
+			setIsEditing(false);
+			// Upload metadata JSON to IPFS using Pinata
+			const metadatahash = await uploadProfile(metadata);
+			console.log(metadatahash);
+			if (metadatahash) {
+				writeToContract();
+				setProfileDetails((prevState: any) => ({
+					...prevState,
+					isEdited: true, // Prevent further edits
+				}));
+			}
+			setIsLoading(false);
+		} catch (error: any) {
+			setIsLoading(false);
+			toast.error("Failed to update profile", error.message);
+
+			console.error("Failed to save profile", error.message);
+		}
+	};
+
 	return (
-		<section className="space-y-4 text-[#A4A4A4]">
-			<h2 className="text-2xl font-bold">My Profile</h2>
-			<div className=" border-b pb-5 border-[#282325]">
-				<div className=" flex  items-center  justify-between w-11/12 m-auto">
-					<div className="w-24 h-24 rounded-full border ">
-						<img
-							src="https://via.placeholder.com/100" 
-							alt="Profile"
-							className="w-24 h-24 rounded-full"
+		<section className="space-y-6 text-white rounded-xl shadow-xl mb-12">
+			<h2 className="text-3xl font-semibold">My Profile</h2>
+			<div className="flex items-center justify-between border-b pb-6 mb-6 border-[#2C2C2C]">
+				<div className="relative w-32 h-32 rounded-full border-2 border-[#DC143C] overflow-hidden">
+					<img
+						src={profileDetails.profilePic}
+						alt="Profile"
+						className="object-cover w-full h-full rounded-full"
+					/>
+					{isEditing && (
+						<label
+							htmlFor="profile-pic"
+							className="absolute bottom-2 right-2 bg-[#DC143C] text-white p-2 rounded-full cursor-pointer"
+						>
+							<span className="text-sm">
+								<Pencil size={14} />
+							</span>
+						</label>
+					)}
+				</div>
+
+				<button
+					onClick={isEditing ? handleSaveInfo : toggleEditMode}
+					className="bg-[#DC143C] text-white px-6 py-2 rounded-full font-semibold"
+					disabled={profileDetails.isEdited}
+				>
+					{isEditing ? (
+						isLoading ? (
+							<div className="relative w-5 h-5 m-auto">
+								<div className="absolute inset-0 border-2 border-blue-100 rounded-full animate-spin-slow"></div>
+								<div className="absolute inset-0 border-2 border-pink-900 border-t-transparent rounded-full animate-spin"></div>
+							</div>
+						) : (
+							"Save Profile"
+						)
+					) : (
+						"Edit Profile"
+					)}
+				</button>
+			</div>
+
+			{isEditing && (
+				<div className="mb-4 hidden">
+					<label
+						htmlFor="profile-pic"
+						className="text-sm text-white font-semibold"
+					>
+						Upload Profile Picture
+					</label>
+					<input
+						id="profile-pic"
+						type="file"
+						accept="image/*"
+						onChange={handleImageChange}
+						className="w-full bg-transparent border border-[#282325] px-3 py-2 text-white"
+					/>
+				</div>
+			)}
+			<div className="space-y-6">
+				{/* Full Name */}
+				<div>
+					<label htmlFor="fullName" className="text-sm font-medium">
+						Full Name
+					</label>
+					<input
+						id="fullName"
+						type="text"
+						value={profileDetails.fullName}
+						onChange={(e) => handleInputChange(e, "fullName")}
+						disabled={!isEditing}
+						placeholder="Enter Full Name"
+						className="w-full bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
+					/>
+				</div>
+
+				{/* Bio */}
+				<div>
+					<label htmlFor="bio" className="text-sm font-medium">
+						Bio
+					</label>
+					<textarea
+						id="bio"
+						value={profileDetails.bio}
+						onChange={(e) => handleInputChange(e, "bio")}
+						disabled={!isEditing}
+						placeholder="Tell us about yourself"
+						className="w-full bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
+						rows={4}
+					/>
+				</div>
+
+				{/* Genre */}
+				<div>
+					<label htmlFor="genre" className="text-sm font-medium">
+						Genre
+					</label>
+					<select
+						id="genre"
+						disabled={!isEditing}
+						value={profileDetails.genre}
+						onChange={(e:any) => handleInputChange(e, "genre")}
+						className="w-full bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
+					>
+						<option className="bg-[#0E0B0E] text-white" value="" disabled>
+							Select your genre
+						</option>
+						<option className="bg-[#0E0B0E] text-white" value="pop">Pop</option>
+						<option className="bg-[#0E0B0E] text-white" value="Christian">
+									Christian
+								</option>
+						<option className="bg-[#0E0B0E] text-white" value="rock">Rock</option>
+						<option className="bg-[#0E0B0E] text-white"  value="hip-hop">Hip-Hop</option>
+						<option className="bg-[#0E0B0E] text-white" value="jazz">Jazz</option>
+						<option className="bg-[#0E0B0E] text-white" value="classical">Classical</option>
+						<option className="bg-[#0E0B0E] text-white" value="electronic">Electronic</option>
+						<option className="bg-[#0E0B0E] text-white" value="reggae">Reggae</option>
+						<option className="bg-[#0E0B0E] text-white" value="country">Country</option>
+					</select>
+				</div>
+
+				{/* Location */}
+				<div>
+					<label htmlFor="location" className="text-sm font-medium">
+						Location
+					</label>
+					<input
+						id="location"
+						type="text"
+						disabled={!isEditing}
+						value={profileDetails.location}
+						onChange={(e) => handleInputChange(e, "location")}
+						placeholder="Enter your location"
+						className="w-full bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
+					/>
+				</div>
+
+				{/* Nationality */}
+				<div>
+					<label htmlFor="nationality" className="text-sm font-medium">
+						Nationality
+					</label>
+					<input
+						id="nationality"
+						type="text"
+						disabled={!isEditing}
+						value={profileDetails.nationality}
+						onChange={(e) => handleInputChange(e, "nationality")}
+						placeholder="Enter your nationality"
+						className="w-full bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
+					/>
+				</div>
+
+				{/* Social Links */}
+				<div className="flex space-x-4">
+					{/* Twitter */}
+					<div className="relative w-full">
+						<label
+							htmlFor="twitter"
+							className="text-sm text-white font-semibold"
+						>
+							Twitter
+						</label>
+						<div className="absolute left-3  top-2/3  transform -translate-y-1/2">
+							<Twitter className="text-white" size={20} />
+						</div>
+						<input
+							id="twitter"
+							type="text"
+							value={profileDetails.twitter}
+							onChange={(e) => handleInputChange(e, "twitter")}
+							disabled={!isEditing}
+							placeholder="Twitter Handle"
+							className="w-full pl-10 bg-transparent rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
 						/>
 					</div>
-					<button className="bg-[#DC143C] font-medium text-sm text-[white] px-4 py-2 rounded-full">
-						Edit Profile
-					</button>
-				</div>
-			</div>
 
-			<div className="mb-8 space-y-4">
-				<div className="">
+					{/* Facebook */}
+					<div className="relative w-full">
+						<label
+							htmlFor="facebook"
+							className="text-sm text-white font-semibold"
+						>
+							Facebook
+						</label>
+						<div className="absolute left-3 top-2/3 transform -translate-y-1/2">
+							<Facebook className="text-white" size={20} />
+						</div>
+						<input
+							id="facebook"
+							type="text"
+							value={profileDetails.facebook}
+							onChange={(e) => handleInputChange(e, "facebook")}
+							disabled={!isEditing}
+							placeholder="Facebook Handle"
+							className="w-full pl-10 bg-transparent rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
+						/>
+					</div>
+				</div>
+
+				{/* Instagram */}
+				<div>
+					<label htmlFor="instagram" className="text-sm font-medium">
+						Instagram
+					</label>
 					<input
+						id="instagram"
 						type="text"
-						placeholder="Alexar Combs"
-						className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
+						value={profileDetails.instagram}
+						onChange={(e) => handleInputChange(e, "instagram")}
+						placeholder="Instagram Handle"
+						className="w-full bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
 					/>
 				</div>
 
-				<input
-					type="text"
-					placeholder="I Am Contemporary Artist Based in London, UK."
-					className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
-				/>
-
-				<div className="flex space-x-4">
-					<input
-						type="text"
-						placeholder="Twitter: @AlexarCombs"
-						className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
-					/>
-					<input
-						type="text"
-						placeholder="Facebook: @AlexarCombs"
-						className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
-					/>
+				{/* Wallet Address */}
+				<div className="mt-6">
+					<h3 className="text-xl font-semibold">Wallet Address</h3>
+					<div className="flex flex-col md:flex-row justify-between items-center py-3 mb-4 border-b border-[#2C2C2C]">
+						<input
+							id="wallet-address"
+							type="text"
+							value={profileDetails.walletAddress}
+							disabled
+							placeholder="Enter Wallet Address"
+							className="md:w-4/5 w-full md:mb-0 mb-3 bg-transparent rounded-lg border border-[#2C2C2C] px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#DC143C]"
+						/>
+					</div>
 				</div>
-			</div>
-
-			<div className="mb-8">
-				<h3 className="text-lg mt-9 border-b border-[#282325] pb-3 font-bold mb-4">
-					Change Password
-				</h3>
-				<div className="space-y-5">
-					<input
-						type="password"
-						placeholder="Enter Password"
-						className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
-					/>
-					<input
-						type="password"
-						placeholder="Reenter Password"
-						className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
-					/>
-					<button className=" md:w-1/3 w-1/2 bg-[#DC143C] text-white text-sm px-4 py-2 rounded-full font-semibold">
-						Change Password
-					</button>
-				</div>
-			</div>
-
-			<div className="pt-8 space-y-5">
-				<div className=" flex justify-between items-center pb-2 mb-4 border-b border-[#282325]">
-					<h3 className="text-lg font-semibold">Change Wallet Address</h3>
-					<button className="bg-[#DC143C] text-sm text-white md:px-4 px-2 py-2 rounded-full font-semibold">
-						Connect New Address
-					</button>
-				</div>
-				<input
-					type="text"
-					placeholder="Enter Address"
-					className="w-full bg-transparent  rounded-full border border-[#282325] px-3 py-2 text-white focus:outline-none focus:shadow-sm focus:shadow-[#FF9393]"
-				/>
-
-				<button className=" md:w-1/3 w-1/2 text-sm bg-[#DC143C] text-white px-4 py-2 rounded-full font-semibold">
-					Change Address
-				</button>
 			</div>
 		</section>
 	);

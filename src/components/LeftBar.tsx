@@ -44,7 +44,7 @@ const LeftBar = ({ close, open}:any) => {
 				</div>
 				<div className="py-4">
 					<Link
-						href="#"
+						href="/dashboard/subscription"
 						className="flex bg-[#FFD700]   text-black text-sm px-4 py-2 rounded-full"
 					>
 						<Gem className="h-4 w-4 mr-3" />
