@@ -12,7 +12,6 @@ export default function Profile() {
 	const { address } = useAccount();
 	const url = process.env.NEXT_PUBLIC_API_URL;
 	const {
-		createGroup,
 		artistProfileDetails,
 		uploadProfile,
 		fetchProfileDetails,
@@ -81,9 +80,9 @@ export default function Profile() {
 
 	const handleSaveInfo = async (e: any) => {
 		e.preventDefault();
-		setIsLoading(true);
 		try {
-			await createGroup();
+			setIsLoading(true);
+			// await createGroup();
 			const pictureHash = await uploadProfilePicture(profilePic!);
 
 			const metadata = {
@@ -97,18 +96,19 @@ export default function Profile() {
 				instagram: profileDetails.instagram,
 				profilePicture: `ipfs://${pictureHash}`,
 			};
-			setIsEditing(false);
+			
 			// Upload metadata JSON to IPFS using Pinata
 			const metadatahash = await uploadProfile(metadata);
 			console.log(metadatahash);
 			if (metadatahash) {
-				writeToContract();
+				writeToContract(metadatahash);
 				setProfileDetails((prevState: any) => ({
 					...prevState,
 					isEdited: true, // Prevent further edits
 				}));
 			}
 			setIsLoading(false);
+			setIsEditing(false);
 		} catch (error: any) {
 			setIsLoading(false);
 			toast.error("Failed to update profile", error.message);

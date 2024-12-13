@@ -101,73 +101,7 @@ const AddMusicForm = () => {
 		setIsUploading(true);
 		try {
 			setProgress(0);
-			// const validateFields = () => {
-			// 	let isValid = true;
-			// 	const newErrors: Record<string, string> = {};
-
-			// 	// Title Validation
-			// 	if (!title) {
-			// 		newErrors.title = "Title is required.";
-			// 		isValid = false;
-			// 	} else if (title.length < 3) {
-			// 		newErrors.title = "Title must be at least 3 characters long.";
-			// 		isValid = false;
-			// 	}
-
-			// 	// Genre Validation
-			// 	if (!genre) {
-			// 		newErrors.genre = "Genre is required.";
-			// 		isValid = false;
-			// 	}
-
-			// 	// Audio File Validation
-			// 	if (!audioFile) {
-			// 		newErrors.audioFile = "Audio file is required.";
-			// 		isValid = false;
-			// 	} else if (
-			// 		!["audio/mpeg", "audio/wav", "audio/mp3"].includes(audioFile.type)
-			// 	) {
-			// 		console.log("Audio File MIME Type:", audioFile.type); // Log the MIME type
-			// 		console.log("Audio File Name:", audioFile.name);
-			// 		newErrors.audioFile = "Audio file must be in .mp3 or .wav format.";
-			// 		isValid = false;
-			// 	}
-
-			// 	// Art File Validation
-			// 	if (!artFile) {
-			// 		newErrors.artFile = "Art file is required.";
-			// 		isValid = false;
-			// 	}
-
-			// 	// Description Validation
-			// 	if (!description) {
-			// 		newErrors.description = "Description is required.";
-			// 		isValid = false;
-			// 	} else if (description.length < 10) {
-			// 		newErrors.description =
-			// 			"Description must be at least 10 characters long.";
-			// 		isValid = false;
-			// 	}
-
-			// 	// Release Date Validation
-			// 	if (
-			// 		!releaseDate ||
-			// 		!(releaseDate instanceof Date) ||
-			// 		isNaN(releaseDate.getTime())
-			// 	) {
-			// 		newErrors.releaseDate = "Valid release date is required.";
-			// 		isValid = false;
-			// 	}
-			// 	// setErrors(newErrors);
-			// 	return isValid;
-			// };
-
 			
-
-			// if (!validateFields()) {
-			// 	setIsLoading(false);
-			// 	return;
-			// }
 
 			const songHash = await pinFileToIpfs(audioFile!, setProgress);
 			const coverArtHash = await pinFileToIpfs(artFile!, setProgress);
@@ -178,15 +112,12 @@ const AddMusicForm = () => {
 				description: description || "No description provided.",
 				image: `ipfs://${coverArtHash}`,
 				animation_url: `ipfs://${songHash}`, // Use this field for audio files (optional)
-				attributes: [
-					{ trait_type: "Genre", value: genre },
-					{ trait_type: "Release Date", value: releaseDate },
-					{ trait_type: "Artist Name", value: artistName || "" },
-					{ trait_type: "Album Name", value: "" },
-					{ trait_type: "Song Title", value: title },
-					{ trait_type: "Composers", value: composers || "" },
-					{ trait_type: "description", value: description || "" },
-				],
+				genre:genre,
+				releaseDate:releaseDate,
+				artistName:artistName,
+				title:title,
+				composers:composers,
+				albumName: "",
 				external_urls: {
 					likes: `https://yourplatform.com/like/${songHash}`, // External links for dynamic data
 					streams: `https://yourplatform.com/streams/${songHash}`,

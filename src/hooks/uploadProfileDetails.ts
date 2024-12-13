@@ -28,7 +28,6 @@ interface ArtistProfileDetails {
 
 export const uploadProfileDetails = () => {
 	const [groupId, setGroupId] = useState<any>();
-	const [profileHash, setProfileHash] = useState<any>();
 	const { address } = useAccount();
 	const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
 	const [artistProfileDetails, setArtistProfileDetails] =
@@ -36,34 +35,34 @@ export const uploadProfileDetails = () => {
 
 	const { writeContractAsync } = useWriteContract();
 
-	const createGroup = async () => {
-		const groupData = {
-			name: "Artist Profile",
-		};
+	// const createGroup = async () => {
+	// 	const groupData = {
+	// 		name: "Artist Profile",
+	// 	};
 
-		try {
-			const createGroupReq = await axios.post(
-				"https://api.pinata.cloud/groups",
+	// 	try {
+	// 		const createGroupReq = await axios.post(
+	// 			"https://api.pinata.cloud/groups",
 
-				groupData,
-				{
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
-						pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
-						pinata_secret_api_key:
-							process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
-					},
-				},
-			);
-			const createGroupRes = await createGroupReq.data;
-			console.log(createGroupRes);
-			setGroupId(createGroupRes);
-		} catch (err: any) {
-			// console.error("Error uploading file to Pinata:", err.message);
-			console.error("Error response:", err.response?.data || err.message);
-		}
-	};
+	// 			groupData,
+	// 			{
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+	// 					pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
+	// 					pinata_secret_api_key:
+	// 						process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY,
+	// 				},
+	// 			},
+	// 		);
+	// 		const createGroupRes = await createGroupReq.data;
+	// 		console.log(createGroupRes);
+	// 		setGroupId(createGroupRes);
+	// 	} catch (err: any) {
+	// 		// console.error("Error uploading file to Pinata:", err.message);
+	// 		console.error("Error response:", err.response?.data || err.message);
+	// 	}
+	// };
 
 	const uploadProfilePicture = async (file: File) => {
 		const formData = new FormData();
@@ -106,7 +105,7 @@ export const uploadProfileDetails = () => {
 				name: formattedName,
 			},
 			pinataOptions: {
-				groupId: groupId.id,
+				groupId: process.env.NEXT_PUBLIC_PINATA_ARTIST_GROUP,
 			},
 		};
 
@@ -125,7 +124,6 @@ export const uploadProfileDetails = () => {
 			);
 
 			console.log("Pinata response:", response.data.IpfsHash);
-			setProfileHash(response.data.IpfsHash);
 			return response.data.IpfsHash;
 		} catch (err: any) {
 			console.error("Error uploading JSON to Pinata:", err);
@@ -133,7 +131,7 @@ export const uploadProfileDetails = () => {
 		}
 	};
 
-	const writeToContract = async () => {
+	const writeToContract = async (profileHash: string) => {
 		try {
 			const tx = await writeContractAsync({
 				abi: abi,
@@ -192,7 +190,7 @@ export const uploadProfileDetails = () => {
 	}, [data, isSuccess]);
 
 	return {
-		createGroup,
+		// createGroup,
 		uploadProfile,
 		uploadProfilePicture,
 		writeToContract,

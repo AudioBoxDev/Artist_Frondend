@@ -1,4 +1,4 @@
-export const contractAddress = "0x713465f91981DE3aF4201b1a1628304bc5d3B734";
+export const contractAddress = "0x604053F1D89A24AEa3b4eFd30407239AA707402a";
 export const abi = [
     {
         "inputs": [],
@@ -537,6 +537,32 @@ export const abi = [
     {
         "inputs": [],
         "name": "getAllAlbums",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAllArtirstIds",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAllSongIds",
         "outputs": [
             {
                 "internalType": "uint256[]",
