@@ -98,6 +98,8 @@ const config: Config = {
 				"music-bar-1": "music-bar 1s ease-in-out infinite",
 				"music-bar-2": "music-bar 1.2s ease-in-out infinite",
 				"music-bar-3": "music-bar 0.8s ease-in-out infinite",
+				'spin-slow': 'spin 2.5s linear infinite',
+				'spin': 'spin 1s linear infinite'
 			},
 		},
 	},

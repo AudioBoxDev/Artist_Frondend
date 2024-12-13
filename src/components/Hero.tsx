@@ -1,7 +1,18 @@
-import React, { useState } from "react";
-import Link from "next/link";
+import  { useState } from "react";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
+import {useRouter} from "next/navigation" 
 
 const Hero = () => {
+	const {artistProfileDetails} =  uploadProfileDetails();
+	const router =useRouter();
+
+	const getStarted=()=>{
+		if(artistProfileDetails){
+			router.push("/dashboard")
+		}else{
+			router.push("/dashboard/profile")
+		}
+	}
 
 	return (
 		<>
@@ -21,12 +32,12 @@ const Hero = () => {
 					</p>
 					<div className=" flex  justify-center items-center  gap-5">
 					<div className="mt-10">
-							<Link
-								href="/dashboard"
+							<button
+								onClick={getStarted}
 								className="bg-gradient-to-r from-[#B1198E] p-1 to-[#B81A3F] text-white text-sm px-8 py-3 rounded-3xl"
 							>
 								Get Started
-							</Link>
+							</button>
 						</div>
 					</div>
 				</div>

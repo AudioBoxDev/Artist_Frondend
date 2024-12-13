@@ -6,9 +6,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import 'react-toastify/dist/ReactToastify.css';
 import Providers from "../context/provider";
 import { ToastContainer } from "react-toastify";
+
 import GoogleAnalytics from "../components/Google-Analytics";
+
+import { headers } from "next/headers";
+
 
 
 const geistSans = localFont({
@@ -32,6 +37,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const cookies = headers().get('cookie')
   
   return (
     <html lang="en">
@@ -47,7 +54,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         
-        <Providers>
+        <Providers cookies={cookies}>
             {children}
         </Providers>
         <ToastContainer />
