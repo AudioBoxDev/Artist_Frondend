@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useDisconnect } from "wagmi";
+import Cookies from "js-cookie";
 
 const Sidebar = ({ isOpen, toggleClose }: any) => {
 	const pathname = usePathname();
@@ -23,6 +24,7 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 	const { disconnect } = useDisconnect();
 
 	const disconnectWallet = () => {
+		Cookies.remove("audioblocks_jwt")
 		disconnect();
 		route.push( "/" );
 	};
@@ -54,7 +56,7 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 					
 				</div>
 
-				<nav className="space-y-4">
+				<nav className="flex flex-col justify-between h-4/5">
 					<div className="space-y-6">
 						<SidebarItems
 							icon={Home}
@@ -64,9 +66,9 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 						/>
 						<SidebarItems
 							icon={Music}
-							label="Albums"
-							to="/dashboard/album"
-							isActive={pathname === "/dashboard/album"}
+							label="Songs"
+							to="/dashboard/song"
+							isActive={pathname === "/dashboard/song"}
 						/>
 						<SidebarItems
 							icon={Wallet}
@@ -80,7 +82,7 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 							to="/dashboard/subscription"
 							isActive={pathname === "/dashboard/subscription"}
 						/>
-						<SidebarItems
+						{/* <SidebarItems
 							icon={FileMusic}
 							label="Audience Insights"
 							to="/dashboard/audience"
@@ -91,7 +93,7 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 							label="Settings"
 							to="/dashboard/settings"
 							isActive={pathname === "/dashboard/settings"}
-						/>
+						/> */}
 						<div>
 							<Link
 								href="/dashboard/upload"
