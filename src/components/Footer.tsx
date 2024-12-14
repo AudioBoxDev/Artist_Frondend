@@ -85,7 +85,7 @@ const Footer = () => {
             <Link href="/" className="hover:text-white">
               <Twitter className="w-6 h-6" />
             </Link>
-            <Link href="/" className="hover:text-white">
+            <Link href="streamaudiobox102@gmail.com" className="hover:text-white">
               <Mail className="w-6 h-6" />
             </Link>
           </div>

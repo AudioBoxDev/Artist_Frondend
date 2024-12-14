@@ -58,7 +58,7 @@ export const useIpfsUpload = () => {
     }
   };
 
-  const pinJsonToIpfs = async (json: any): Promise<string> => {
+  const pinJsonToIpfs = async (json: any) => {
 
     // Ensure that json.songtitle exists and is a valid string
     const defaultSongTitle = generateRandomSongTitle();
@@ -93,7 +93,6 @@ export const useIpfsUpload = () => {
     } catch (err) {
         console.error('Error uploading JSON to Pinata:', err);
         setError(err as Error);
-        throw err;
     } finally {
         setLoading(false);
     }
@@ -111,7 +110,6 @@ const uploadSongToBackend= async (songDetails:any)=>{
 		} catch (error: any) {
 			console.error(error.response?.data?.message);
 			toast.error(error.response?.data?.message || "Authentication failed");
-			throw error;
 		}
 }
 

@@ -120,7 +120,6 @@ export const ConnectBtn = () => {
 			if (!isConnected) {
 				await open();
 			}
-			toast.success("Wallet connected successfully!");
 		} catch (error: any) {
 			toast.error(error.message || "Failed to connect wallet");
 		} finally {
