@@ -1,17 +1,26 @@
 import  { useState } from "react";
 import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 import {useRouter} from "next/navigation" 
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const Hero = () => {
 	const {artistProfileDetails} =  uploadProfileDetails();
 	const router =useRouter();
-
+	
+const token = Cookies.get("audioblocks_jwt");
 	const getStarted=()=>{
+		if (token) {
+			
+		
 		if(artistProfileDetails){
 			router.push("/dashboard")
 		}else{
 			router.push("/dashboard/profile")
 		}
+	} else{
+		toast.error("Please connect your wallet and sign the Authentication message")
+	}
 	}
 
 	return (

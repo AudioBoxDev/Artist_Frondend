@@ -104,7 +104,7 @@ export default function Profile() {
 				writeToContract(metadatahash);
 				setProfileDetails((prevState: any) => ({
 					...prevState,
-					isEdited: true, // Prevent further edits
+					isEdited: true,
 				}));
 			}
 			setIsLoading(false);

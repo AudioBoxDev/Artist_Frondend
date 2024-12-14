@@ -1,5 +1,4 @@
 "use client";
-import { log } from "console";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import { useIpfsUpload } from "@/hooks/useIpfsUpload";
@@ -88,13 +87,7 @@ const AddMusicForm = () => {
 		}
 	};
 
-	// const dismissError = (field: string) => {
-	// 	setErrors((prevErrors) => {
-	// 		const newErrors = { ...prevErrors };
-	// 		delete newErrors[field];
-	// 		return newErrors;
-	// 	});
-	// };
+
 
 	const onSubmit = async (e: any) => {
 		e.preventDefault();
@@ -161,32 +154,13 @@ const AddMusicForm = () => {
 		// setArtFile(null)
 		// setPreviewUrl("")
 		// setComposers("");
-		// setErrors({});
 
-		//Contract Comes Here.
 	};
 
 	return (
 		<div className=" m-auto flex mb-12 font-roboto rounded-xl p-5  items-center justify-center  bg-[#0E0B0E] text-[#A4A4A4]">
 			<div>
-				{/* {submited ? (
-					<Alert
-						key={"01"}
-						message={"Song Uploaded Successfully"}
-						type="success"
-						// onDismiss={() => dismissError("01")}
-					/>
-				) : (
-					""
-				)}
-				{Object.keys(errors).map((field) => (
-					<Alert
-						key={field}
-						message={errors[field]}
-						type="error"
-						onDismiss={() => dismissError(field)}
-					/>
-				))} */}
+				
 				<form  onSubmit={onSubmit} className="space-y-6 mb-5">
 					<div className="flex md:flex-row flex-col md:items-center justify-between">
 						<h2 className="md:text-3xl text-xl font-bold mb-6">Add Music</h2>
@@ -195,7 +169,7 @@ const AddMusicForm = () => {
 								Upload Art
 								<input
 									type="file"
-									// {...register("artFile")}
+									{...register("artFile")}
 									onChange={handleArtFileChange}
 									className="hidden"
 									accept="image/*"
@@ -213,9 +187,9 @@ const AddMusicForm = () => {
 							</div>
 						</div>
 					</div>
-					{/* {errors.artFile && (
+					{errors.artFile && (
 						<p className="text-red-500">{errors.artFile.message}</p>
-					)} */}
+					)}
 					<div className="grid md:grid-cols-2 gap-10">
 						<div>
 							<label className="block text-sm font-normal mb-1" htmlFor="album">
@@ -378,15 +352,7 @@ const AddMusicForm = () => {
 					</div>
 
 					{/* Progress Bar */}
-					{/* {isUploading && (
-						<div className="w-full bg-gray-800 rounded-full h-2.5">
-							<div
-								className="bg-[#DC143C] h-2.5 rounded-full transition-all"
-								style={{ width: `${uploadProgress}%` }}
-							></div>
-							<p className="text-xs text-white mt-1">{uploadProgress}%</p>
-						</div>
-					)} */}
+					
 					{progress !== null && (
 						<div>
 							<p>Uploading: {progress}%</p>
