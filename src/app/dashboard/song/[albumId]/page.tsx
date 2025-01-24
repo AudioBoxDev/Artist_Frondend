@@ -1,7 +1,56 @@
-import React from "react";
-import Rectangle4 from "/public/images/Rectangle4.png";
+"use client";
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useReadContract } from "wagmi";
+import { abi, contractAddress } from "@/config/abi";
+import axios from "axios";
 
 const NftHolderCard = () => {
+  const params = useParams();
+  const [songData, setSongData] = useState<any>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { data, isSuccess: success }: any = useReadContract({
+		abi: abi,
+		address: contractAddress,
+		functionName: "getSongById",
+		args: [params.albumId],
+	});
+
+	const fetchSong = async (songData: any) => {
+		try {
+			setIsLoading(true);
+			const gateway = songData.songCID.replace(
+				"ipfs://",
+				`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+			);
+			const response = await axios.get(gateway, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			const artistSong = {
+				...response.data,
+				songId: Number(songData.songId),
+			};
+       
+			setSongData(artistSong);
+
+			setIsLoading(false);
+		} catch (error: any) {
+			setIsLoading(false);
+			console.error("Error fetching song details:", error.message);
+		}
+	};
+
+	useEffect(() => {
+		if (success && data) {
+      console.log(data);
+			fetchSong(data);
+		}
+	}, [data]);
+
+
   return (
     <div className=" mx-auto bg-[#0E0B0E] mb-7 mt-4 text-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row md:space-x-6">
       {/* Left Section: Image and Details */}
@@ -9,7 +58,10 @@ const NftHolderCard = () => {
         {/* NFT Image */}
         <div className="mb-6 rounded-lg w-full">
           <img
-            src="/images/Rectangle4.png" 
+            src={songData?.image?.replace(
+							"ipfs://",
+							`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+						)}
             alt="Happy Day"
             className="w-full h-auto object-cover rounded-lg"
           />
@@ -18,13 +70,11 @@ const NftHolderCard = () => {
         {/* NFT Details */}
         <div className="space-y-4">
           <div>
-            <h2 className="text-2xl font-bold">Happy Day</h2>
+            <h2 className="text-2xl font-bold">{songData?.name}</h2>
             <p className="text-gray-400 text-sm">1 Item</p>
           </div>
           <p className="text-gray-300 text-sm">
-            Vestibulum faucibus eget est eget pretium. Donec commodo convallis
-            eget suscipit orci. Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit.
+            {songData?.description}
           </p>
 
           <div className="grid grid-cols-2 gap-4 text-gray-300 text-sm">

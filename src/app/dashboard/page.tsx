@@ -39,7 +39,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-xs">Listeners</p>
-            <p className="text-lg font-semibold">1,000</p>
+            <p className="text-lg font-semibold">0</p>
           </div>
         </div>
         <div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -48,7 +48,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-xs">Streams</p>
-            <p className="text-lg font-semibold">50,000</p>
+            <p className="text-lg font-semibold">0</p>
           </div>
         </div>
         <div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -57,7 +57,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-xs">Balance</p>
-            <p className="text-lg font-semibold">50,000</p>
+            <p className="text-lg font-semibold">0</p>
           </div>
         </div>
       </div>

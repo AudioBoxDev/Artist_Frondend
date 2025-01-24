@@ -24,7 +24,7 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 	const { disconnect } = useDisconnect();
 
 	const disconnectWallet = () => {
-		Cookies.remove("audioblocks_jwt")
+		Cookies.remove("audioblocks_artist_jwt")
 		disconnect();
 		route.push( "/" );
 	};

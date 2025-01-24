@@ -4,18 +4,39 @@ import Image from "next/image";
 import Link from "next/link";
 import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { useAccount } from "wagmi";
+
 
 const FanEngagementSection = () => {
 	const { artistProfileDetails } = uploadProfileDetails();
 	const router = useRouter();
 
-	const getStarted = () => {
-		if (artistProfileDetails) {
-			router.push("/dashboard");
+	const {isConnected} = useAccount();
+	const token = Cookies.get("audioblocks_artist_jwt");
+
+const getStarted = async() => {
+	try {
+		if (token && token.trim() !== "") {
+			const redirectPath = artistProfileDetails ? "/dashboard" : "/dashboard/profile";
+
+			// router.push(redirectPath);
+			window.open(redirectPath, "_blank");
+
 		} else {
-			router.push("/dashboard/profile");
+			// Handle missing wallet connection or token
+			if (!isConnected) {
+				toast.error("Please connect your wallet");
+			} else if(isConnected && !token){
+				toast.error("Please sign the Authentication message");
+			}
 		}
-	};
+	} catch (error:any) {
+		toast.error(error);
+	}
+	
+};
 
 	return (
 		<div className="bg-gradient-to-b z-10 font-roboto w-11/12 mx-auto rounded-3xl from-[#394B5E1F] to-[#2A313D24] text-[#DACFD3] my-16 md:py-32 py-16 md:px-10 px-6">
