@@ -12,6 +12,7 @@ import Link from "next/link";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 
 const truncateAddress = (address: any) =>
 	`${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -22,10 +23,11 @@ export default function AvatarDropdown() {
 	const { data: balance } = useBalance({ address });
 	const [isCopied, setIsCopied] = useState(false);
 	const route = useRouter();
+	const {artistProfileDetails} =  uploadProfileDetails();
 
 
 	const disconnectWallet = () => {
-		Cookies.remove("audioblocks_jwt");
+		Cookies.remove("audioblocks_artist_jwt");
 		disconnect();
 		route.push( "/" );
 	};
@@ -42,9 +44,13 @@ export default function AvatarDropdown() {
 
 	// Generate a random avatar based on the address (or use a placeholder if not connected)
 	const avatarUrl = isConnected
-		? `https://api.dicebear.com/6.x/pixel-art/svg?seed=${address}`
-		: "https://via.placeholder.com/40";
-
+	? artistProfileDetails?.profilePicture
+		? artistProfileDetails?.profilePicture?.replace(
+				"ipfs://",
+				`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+		  )
+		: `https://api.dicebear.com/6.x/pixel-art/svg?seed=${address}`
+	: "https://via.placeholder.com/40";
 	return (
 		<div className="relative font-roboto">
 			<DropdownMenu>

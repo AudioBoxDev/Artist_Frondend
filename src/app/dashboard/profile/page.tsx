@@ -106,6 +106,7 @@ export default function Profile() {
 					...prevState,
 					isEdited: true,
 				}));
+
 			}
 			setIsLoading(false);
 			setIsEditing(false);

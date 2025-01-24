@@ -1,5 +1,5 @@
 "use client"
-import AudioBoxFeatures from "@/components/AudioBoxFeatures";
+import AudioBlocksFeatures from "@/components/AudioBlocksFeatures";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Navbar2 from "@/components/Navbar2";
@@ -9,23 +9,42 @@ import FanEngagementSection from "@/components/FanEngagementSection";
 import AnalyticsDashboardSection from "@/components/AnalyticsDashboardSection";
 import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 import {useRouter} from "next/navigation" 
+import { toast } from "react-toastify";
+import { useAccount } from "wagmi";
+import Cookies from "js-cookie";
 
 export default function Home() {
   const {artistProfileDetails} =  uploadProfileDetails();
 	const router =useRouter();
+  const {isConnected} = useAccount();
+	const token = Cookies.get("audioblocks_artist_jwt");
 
-	const getStarted=()=>{
-		if(artistProfileDetails){
-			router.push("/dashboard")
-		}else{
-			router.push("/dashboard/profile")
+const getStarted = async() => {
+	try {
+		if (token && token.trim() !== "") {
+			const redirectPath = artistProfileDetails ? "/dashboard" : "/dashboard/profile";
+
+			// router.push(redirectPath);
+			window.open(redirectPath, "_blank");
+
+		} else {
+			// Handle missing wallet connection or token
+			if (!isConnected) {
+				toast.error("Please connect your wallet");
+			} else if(isConnected && !token){
+				toast.error("Please sign the Authentication message");
+			}
 		}
+	} catch (error:any) {
+		toast.error(error);
 	}
+	
+};
   return (
   <>
     <Navbar2/>
       <Hero/>
-    <AudioBoxFeatures/>
+    <AudioBlocksFeatures/>
       <div className="relative">
 
     <AnalyticsDashboardSection/>

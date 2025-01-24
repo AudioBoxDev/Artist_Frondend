@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 import React from "react";
 
-const AudioBoxFeatures = () => {
+const AudioBlocksFeatures = () => {
 	return (
 		<div className="bg-[#0E070C] font-roboto w-11/12 mx-auto rounded-xl text-white py-16 my-7 px-8">
 			<div className="text-center mb-12">
@@ -85,4 +85,4 @@ const AudioBoxFeatures = () => {
 	);
 };
 
-export default AudioBoxFeatures;
+export default AudioBlocksFeatures;

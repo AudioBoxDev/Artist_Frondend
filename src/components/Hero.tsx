@@ -3,26 +3,35 @@ import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 import {useRouter} from "next/navigation" 
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { useAccount } from "wagmi";
 
 const Hero = () => {
 	const {artistProfileDetails} =  uploadProfileDetails();
 	const router =useRouter();
-	
-const token = Cookies.get("audioblocks_jwt");
-	const getStarted=()=>{
-		if (token) {
-			
-		
-		if(artistProfileDetails){
-			router.push("/dashboard")
-		}else{
-			router.push("/dashboard/profile")
-		}
-	} else{
-		toast.error("Please connect your wallet and sign the Authentication message")
-	}
-	}
+	const {isConnected} = useAccount();
+	const token = Cookies.get("audioblocks_artist_jwt");
 
+const getStarted = async() => {
+	try {
+		if (token && token.trim() !== "") {
+			console.log(artistProfileDetails);
+			
+			const redirectPath = artistProfileDetails ? "/dashboard" : "/dashboard/profile";
+			window.open(redirectPath, "_blank");
+
+		} else {
+			// Handle missing wallet connection or token
+			if (!isConnected) {
+				toast.error("Please connect your wallet");
+			} else if(isConnected && !token){
+				toast.error("Please sign the Authentication message");
+			}
+		}
+	} catch (error:any) {
+		toast.error(error);
+	}
+	
+};
 	return (
 		<>
 			<div className=" bg-gradient-to-br  flex flex-col md:pt-36 pt-40  pb-6 font-roboto  -mt-28  from-[#1d02185c] to-transparent md:h-screen  justify-center items-center">

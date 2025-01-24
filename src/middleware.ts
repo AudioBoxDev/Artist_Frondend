@@ -15,7 +15,7 @@ export default function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
 
 	// Check for authentication token in cookies
-	const token = req.cookies.get("audioblocks_jwt");
+	const token = req.cookies.get("audioblocks_artist_jwt");
 
 	// If no token and trying to access protected route, redirect to home
 	if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {

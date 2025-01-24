@@ -1,17 +1,31 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { abi, contractAddress } from "@/config/abi";
+import { useAccount, useReadContract, useReadContracts } from "wagmi";
+import { dataTagSymbol } from "@tanstack/react-query";
+import axios from "axios";
 
-const Card = ({ title, by, time, eth }: any) => {
+const Card = ({ title, by, image, eth, songid }: any) => {
 	const route = useRouter();
-	const handleClick = (id:any) => {
-		route.push(`/dashboard/song/${id}`)
-	}
+
+	
+
+	const songDetails = (id: any, title: any) => {
+		// const formattedTitle = title.replace(/\s+/g, "-").toLowerCase();
+
+		route.push(
+			`/dashboard/song/${id}`,
+		);
+	};
 	return (
-		<div onClick={()=>handleClick(1)} className="bg-[#0E0B0E]  cursor-pointer rounded-xl shadow-lg p-4 text-white">
+		<div
+			onClick={() => songDetails(songid, title)}
+			className="bg-[#0E0B0E]  cursor-pointer rounded-xl shadow-lg p-4 text-white"
+		>
 			<div className="overflow-hidden h-80 rounded-lg">
 				<img
-					src="/images/Rectangle4.png" // Replace with your image URL
+					src={image} // Replace with your image URL
 					alt={title}
 					className="w-full  object-cover object-center rounded-lg"
 				/>
@@ -25,10 +39,10 @@ const Card = ({ title, by, time, eth }: any) => {
 						<p className="text-base text-[#68676E]">Price</p>
 						<p className="text-sm text-white">{eth} ETH</p>
 					</div>
-					<div>
+					{/* <div>
 						<p className="text-base text-[#68676E]">Highest bid</p>
 						<p className="text-sm text-white">{by}</p>
-					</div>
+					</div> */}
 				</div>
 
 				<div className="mt-4">
@@ -42,23 +56,83 @@ const Card = ({ title, by, time, eth }: any) => {
 };
 
 const CardGrid = () => {
-	const data = Array(4).fill({
-		title: "Good Day",
-		price: "20",
-		eth: "0.08",
-		by: "peter",
+	const [isLoading, setIsLoading] = useState(false);
+	const [songs, setSongsData] = useState<any[]>([]);
+	const { address } = useAccount();
+
+	const { data: songIds, isSuccess: issuccess }: any = useReadContract({
+		address: contractAddress,
+		abi: abi,
+		functionName: "getArtistSongs",
+		args: [address],
+		account: address,
 	});
+
+	const { data, isSuccess: success }: any = useReadContracts({
+		contracts:
+			songIds?.map((songid: any) => ({
+				abi: abi,
+				address: contractAddress,
+				functionName: "getSongById",
+				args: [songid],
+				account: address,
+			})) || [],
+	});
+
+	const fetchSong = async (songDataArray: any[]) => {
+		try {
+			const songs = [];
+			setIsLoading(true);
+			for (const songData of songDataArray) {
+				const gateway = songData.result.songCID.replace(
+					"ipfs://",
+					`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+				);
+				const response = await axios.get(gateway, {
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+				const artistSong = {
+					...response.data,
+					songId: Number(songData.result.songId),
+
+					artistAddress: songData.result.artistAddress,
+				};
+
+				songs.push(artistSong);
+				console.log(songs);
+
+				setSongsData(songs);
+			}
+			setIsLoading(false);
+		} catch (error: any) {
+			setIsLoading(false);
+			console.error("Error fetching song details:", error.message);
+		}
+	};
+
+	useEffect(() => {
+		if (data && success) {
+			fetchSong(data);
+		}
+	}, [data, success]);
 
 	return (
 		<div className=" min-h-screen">
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-				{data.map((item, index) => (
+				{songs?.map((song: any, index: any) => (
 					<Card
 						key={index}
-						title={item.title}
-						price={item.price}
-						eth={item.eth}
-						by={item.by}
+						title={song.name}
+						image={song?.image.replace(
+							"ipfs://",
+							`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+						)}
+						songid={song.songId}
+						// price={song.price}
+						// eth={song.eth}
+						// by={song.artistAddress}
 					/>
 				))}
 			</div>
