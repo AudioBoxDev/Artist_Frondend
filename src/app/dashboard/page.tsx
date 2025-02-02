@@ -17,13 +17,33 @@ import Cookies from "js-cookie";
 
 const Dashboard = () => {
 	const [songStats, setSongStats] = useState<any[]>([]);
+	const [artistStats, setArtistStats] = useState<any>(null);
 	const jwt = Cookies.get("audioblocks_artist_jwt");
+	const url = process.env.NEXT_PUBLIC_API_URL;
+
+	const getArtistStat = async () => {
+		try {
+			const response = await axios.get(
+				`${url}/user/get-artist-stats`,
+				{
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${jwt}`,
+					},
+				},
+			);
+
+				if (response.data.success) {
+					console.log(response.data.data);
+					setArtistStats(response.data.data); // Store the song stats in state
+				}
+		} catch (error: any) {} }
 
 	useEffect(() => {
 		const fetchArtistSongStats = async () => {
 			try {
 				const response = await axios.get(
-					"https://backend-6upv.onrender.com/song/get-artist-song-stats",
+					`${url}/song/get-artist-song-stats`,
 					{
 						headers: {
 							"Content-Type": "application/json",
@@ -39,7 +59,7 @@ const Dashboard = () => {
 				console.log(error.message);
 			}
 		};
-
+		getArtistStat();
 		fetchArtistSongStats();
 	}, []);
 
