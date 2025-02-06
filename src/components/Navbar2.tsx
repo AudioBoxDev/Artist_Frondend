@@ -76,7 +76,7 @@ const Navbar2 = () => {
 					animate={{ opacity: 1, x: 0 }}
 					transition={{ duration: 1, delay: 0.3 }}
 				>
-					<Link href="/" className="flex items-center space-x-3">
+					<Link href="https://www.audioblocks.org/" className="flex items-center space-x-3">
 						<motion.div
 							whileHover={{ scale: 1.1, rotate: 5 }}
 							transition={{ type: "spring", stiffness: 200 }}
@@ -111,19 +111,6 @@ const Navbar2 = () => {
 							className="text-lg"
 						>
 							Stream
-						</a>
-					</motion.div>
-					<motion.div
-						whileHover={{ scale: 1.1, color: "#FF4081" }}
-						transition={{ duration: 0.3 }}
-					>
-						<a
-							href="https://audioblocks-artist.vercel.app/"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="text-lg"
-						>
-							Artist Hub
 						</a>
 					</motion.div>
 					
