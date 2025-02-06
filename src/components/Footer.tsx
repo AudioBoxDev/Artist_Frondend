@@ -15,10 +15,8 @@ const Footer = () => {
 						/>
 						<h2 className="text-white font-semibold text-xl">AudioBlocks</h2>
 					</div>
-					<p className="text-sm">
-						AudioBlocks is a music platform that empowers artists to retain
-						ownership of their music and earn fair revenue. Fans can discover,
-						stream, and support artists directly
+					<p className="text-lg">
+						AudioBlocks is an innovative music platform built for artists and liteners.  Stream, earn and own the music you love.
 					</p>
 				</div>
 
@@ -28,17 +26,12 @@ const Footer = () => {
 					</h3>
 					<ul className="space-y-2">
 						<li>
-							<Link href="/dashboard" className="hover:text-white">
+							<Link href="https://www.audioblocks.org/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
 								Stream
 							</Link>
 						</li>
 						<li>
-							<Link href="/" className="hover:text-white">
-								Marketplace
-							</Link>
-						</li>
-						<li>
-							<Link href="/" className="hover:text-white">
+							<Link href="https://audioblocks-artist.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
 								Artist Hub
 							</Link>
 						</li>
@@ -49,22 +42,22 @@ const Footer = () => {
 					<h3 className="text-[#5B5C61] font-semibold text-lg mb-4">Support</h3>
 					<ul className="space-y-2">
 						<li>
-							<Link href="/" className="hover:text-white">
+							<Link href="/" className="hover:text-white text-lg">
 								FAQ
 							</Link>
 						</li>
 						<li>
-							<Link href="/" className="hover:text-white">
+							<Link href="/" className="hover:text-white text-lg">
 								Contact
 							</Link>
 						</li>
 						<li>
-							<Link href="/" className="hover:text-white">
+							<Link href="/" className="hover:text-white text-lg">
 								Privacy Policy
 							</Link>
 						</li>
 						<li>
-							<Link href="/" className="hover:text-white">
+							<Link href="/" className="hover:text-white text-lg">
 								Terms of Service
 							</Link>
 						</li>
@@ -79,23 +72,19 @@ const Footer = () => {
 						For recent updates and news follow our social media feeds
 					</p>
 					<div className="flex space-x-4">
-						<Link href="/" className="hover:text-white">
-							<i className="fab fa-youtube"></i>
+						<Link href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
 							<Youtube className="w-6 h-6" />
 						</Link>
-						<Link href="/" className="hover:text-white">
+						<Link href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
 							<Instagram className="w-6 h-6" />
 						</Link>
-						<Link href="/" className="hover:text-white">
+						<Link href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
 							<Facebook className="w-6 h-6" />
 						</Link>
-						<Link href="/" className="hover:text-white">
+						<Link href="https://www.twitter.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
 							<Twitter className="w-6 h-6" />
 						</Link>
-						<Link
-							href="streamaudiobox102@gmail.com"
-							className="hover:text-white"
-						>
+						<Link href="mailto:streamaudiobox102@gmail.com" className="hover:text-white">
 							<Mail className="w-6 h-6" />
 						</Link>
 					</div>
