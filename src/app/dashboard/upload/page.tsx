@@ -1,15 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { useIpfsUpload } from "@/hooks/useIpfsUpload";
 import { isValid } from "react-datepicker/dist/date_utils";
-import Alert from "../../../components/Alert"; // Import the Alert component
 import { replaceSpecialCharacters } from "@/lib/helper";
 import { toast } from "react-toastify";
 import * as z from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
+import { useRouter } from "next/navigation";
 
 const AddMusicSchema = z.object({
 	title: z.string().min(3, "Title must be at least 3 characters long."),
@@ -44,12 +44,21 @@ const AddMusicForm = () => {
 	const [composers, setComposers] = useState("");
 	const [isUploading, setIsUploading] = useState(false);
 	const [progress, setProgress]  =  useState<number | null>(null);
+	const route = useRouter();
+	const { artistProfileDetails, isLoading } = uploadProfileDetails();
+	
+	
+		useEffect(() => {
+			if (!isLoading && !artistProfileDetails) {
+				route.push("/dashboard/profile");
+			}
+		}, [artistProfileDetails, isLoading, route]);
 
 	// const [errors, setErrors] = useState<Record<string, string>>({});
 
 	const { pinFileToIpfs, uploadSongToBackend, writeToContract, pinJsonToIpfs, loading, error } =
 		useIpfsUpload();
-		const {artistProfileDetails} =  uploadProfileDetails();
+		
 
 	const handleArtFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];

@@ -5,18 +5,22 @@ import { abi, contractAddress } from "@/config/abi";
 import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import { dataTagSymbol } from "@tanstack/react-query";
 import axios from "axios";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 
 const Card = ({ title, by, image, eth, songid }: any) => {
 	const route = useRouter();
+	const { artistProfileDetails, isLoading } = uploadProfileDetails();
 
-	
+	useEffect(() => {
+		if (!isLoading && !artistProfileDetails) {
+			route.push("/dashboard/profile");
+		}
+	}, [artistProfileDetails, isLoading, route]);
 
 	const songDetails = (id: any, title: any) => {
 		// const formattedTitle = title.replace(/\s+/g, "-").toLowerCase();
 
-		route.push(
-			`/dashboard/song/${id}`,
-		);
+		route.push(`/dashboard/song/${id}`);
 	};
 	return (
 		<div

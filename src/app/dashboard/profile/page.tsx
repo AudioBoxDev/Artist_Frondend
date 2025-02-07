@@ -1,6 +1,6 @@
 "use client";
 import { Pen, Pencil } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { Twitter, Facebook } from "lucide-react";
 import { useAccount } from "wagmi";
 import axios from "axios";
@@ -32,6 +32,15 @@ export default function Profile() {
 	});
 	const [profilePic, setProfilePic] = useState<File | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+
+	useLayoutEffect(() => {
+		if (!artistProfileDetails) {
+			setIsEditing(true);
+		} else {
+			setIsEditing(false);
+		}
+	}, [artistProfileDetails]);
+
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

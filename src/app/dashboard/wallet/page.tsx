@@ -1,16 +1,26 @@
-"use client"
-import {  Image, Radius, Wallet } from "lucide-react";
+"use client";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
+import { Image, Radius, Wallet } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 const WalletPage = () => {
-    const router = useRouter();
-    const TxnDetails =()=>{
-        router.push('/dashboard/transactions')
-    }
-    const AssetDetails =()=>{
-        router.push('/dashboard/assets')
-    }
+	const router = useRouter();
+	const { artistProfileDetails, isLoading } = uploadProfileDetails();
+
+	useEffect(() => {
+		if (!isLoading && !artistProfileDetails) {
+			router.push("/dashboard/profile");
+		}
+	}, [artistProfileDetails, isLoading, router]);
+	
+	const TxnDetails = () => {
+		router.push("/dashboard/transactions");
+	};
+
+	const AssetDetails = () => {
+		router.push("/dashboard/assets");
+	};
 	return (
 		<>
 			<div className="font-roboto min-h-screen mt-5 text-[#A4A4A4]">
@@ -59,7 +69,10 @@ const WalletPage = () => {
 					<div className="flex justify-between border-b pb-1 border-[#151515] text-white mb-4 items-center">
 						<h1 className="text-2xl font-bold text-[#A4A4A4]">My Assets</h1>
 
-						<button onClick={AssetDetails} className="text-[#666C6C]  text-sm uppercase font-semibold px-3  py-1 rounded-full">
+						<button
+							onClick={AssetDetails}
+							className="text-[#666C6C]  text-sm uppercase font-semibold px-3  py-1 rounded-full"
+						>
 							SEE DETAIL
 						</button>
 					</div>
@@ -67,9 +80,14 @@ const WalletPage = () => {
 
 				<div>
 					<div className="flex justify-between border-b pb-1 border-[#151515] text-white mb-4 items-center">
-						<h1 className="text-2xl font-bold text-[#A4A4A4]">Transactions History</h1>
+						<h1 className="text-2xl font-bold text-[#A4A4A4]">
+							Transactions History
+						</h1>
 
-						<button onClick={TxnDetails} className="text-[#666C6C]  text-sm uppercase font-semibold px-3  py-1 rounded-full">
+						<button
+							onClick={TxnDetails}
+							className="text-[#666C6C]  text-sm uppercase font-semibold px-3  py-1 rounded-full"
+						>
 							SEE DETAIL
 						</button>
 					</div>
