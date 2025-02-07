@@ -1,4 +1,5 @@
 "use client";
+import { Stat } from "@/hooks/ArtistStat";
 import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 import { Image, Radius, Wallet } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -7,6 +8,8 @@ import React, { useEffect } from "react";
 const WalletPage = () => {
 	const router = useRouter();
 	const { artistProfileDetails, isLoading } = uploadProfileDetails();
+	const { artistStats } = Stat();
+
 
 	useEffect(() => {
 		if (!isLoading && !artistProfileDetails) {
@@ -42,7 +45,7 @@ const WalletPage = () => {
 						</div>
 						<div>
 							<p className="text-xs">Balance</p>
-							<p className="text-lg font-semibold">0</p>
+							<p className="text-lg font-semibold">{artistStats?.rewardPoints}</p>
 						</div>
 					</div>
 					<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -51,7 +54,7 @@ const WalletPage = () => {
 						</div>
 						<div>
 							<p className="text-xs">Streaming Point</p>
-							<p className="text-lg font-semibold">0 SP</p>
+							<p className="text-lg font-semibold">{artistStats?.totalStreams} SP</p>
 						</div>
 					</div>
 					<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
