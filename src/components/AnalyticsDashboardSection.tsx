@@ -4,28 +4,28 @@ import Image from 'next/image';
 
 const AnalyticsDashboardSection = () => {
   return (
-    <div className="bg-gradient-to-b z-10 w-11/12 mx-auto rounded-3xl from-[#394B5E1F] to-[#2A313D24] font-roboto text-[#DACFD3] my-16 md:py-32 py-16 md:px-16 px-6">
+    <div className="bg-gradient-to-b z-10 font-roboto w-11/12 mx-auto rounded-3xl from-[#394B5E1F] to-[#2A313D24] text-[#DACFD3] my-16 md:py-32 py-16 md:px-10 px-6">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10">
         <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <h2 className="md:text-5xl text-3xl font-semibold mb-6">Revenue and Analytics Dashboard</h2>
+          <h2 className="md:text-5xl text-3xl font-semibold mb-6">Artist Dashboard – Your Music, Your Earnings, Your Future</h2>
           <div className="mb-8">
             <h3 className="text-xl text-white font-semibold mb-2">Real-Time Insights</h3>
             <p className="text-gray-300">
-              An embedded interactive calendar allowing you to view and subscribe to upcoming events and programs.
+              Track your streams, revenue, and audience engagement with an easy-to-use dashboard. Get the data you need to grow your career.
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold  mb-2">Flexible Revenue Options</h3>
+            <h3 className="text-xl font-semibold  mb-2">Multiple Revenue Streams</h3>
             <p className="text-gray-300">
-              Filter events by categories like Services, Group, Outreach, Study, and more.
+              Earn from streams, NFT sales, fan contributions, and royalties—your music, your earnings, your rules.
             </p>
           </div>
         </div>
-        <div className="w-full lg:w-1/2 md:-mr-96  overflow-x-hidden">
+        <div className="w-full lg:w-1/2">
           <Image
             src={MacBookAir1} 
             alt="Revenue and Analytics Dashboard Preview"
-            className="w-full rounded-lg shadow-lg"
+            className="w- rounded-lg shadow-lg"
           />
         </div>
       </div>
