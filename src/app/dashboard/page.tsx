@@ -16,13 +16,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
 import { useRouter } from "next/navigation";
+import { Stat } from "@/hooks/ArtistStat";
 
 const Dashboard = () => {
 	const [songStats, setSongStats] = useState<any[]>([]);
-	const [artistStats, setArtistStats] = useState<any>(null);
 	const jwt = Cookies.get("audioblocks_artist_jwt");
 	const url = process.env.NEXT_PUBLIC_API_URL;
 	const route = useRouter();
+	const {artistStats}= Stat()
 	const { artistProfileDetails, isLoading } = uploadProfileDetails();
 
 
@@ -32,21 +33,6 @@ const Dashboard = () => {
 		}
 	}, [artistProfileDetails, isLoading, route]);
 
-	const getArtistStat = async () => {
-		try {
-			const response = await axios.get(`${url}/user/get-artist-stats`, {
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${jwt}`,
-				},
-			});
-
-			if (response.data.success) {
-				console.log(response.data.data);
-				setArtistStats(response.data.data); // Store the song stats in state
-			}
-		} catch (error: any) {}
-	};
 
 	useEffect(() => {
 		const fetchArtistSongStats = async () => {
@@ -65,7 +51,6 @@ const Dashboard = () => {
 				console.log(error.message);
 			}
 		};
-		getArtistStat();
 		fetchArtistSongStats();
 	}, []);
 
@@ -94,7 +79,7 @@ const Dashboard = () => {
 					</div>
 					<div>
 						<p className="text-xs">Listeners</p>
-						<p className="text-lg font-semibold">0</p>
+						<p className="text-lg font-semibold">{artistStats?.uniqueListeners}</p>
 					</div>
 				</div>
 				<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -103,7 +88,7 @@ const Dashboard = () => {
 					</div>
 					<div>
 						<p className="text-xs">Streams</p>
-						<p className="text-lg font-semibold">0</p>
+						<p className="text-lg font-semibold">{artistStats?.totalStreams}</p>
 					</div>
 				</div>
 				<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -112,7 +97,7 @@ const Dashboard = () => {
 					</div>
 					<div>
 						<p className="text-xs">Balance</p>
-						<p className="text-lg font-semibold">0</p>
+						<p className="text-lg font-semibold">{artistStats?.rewardPoints}</p>
 					</div>
 				</div>
 			</div>
