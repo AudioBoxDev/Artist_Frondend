@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import React, { Suspense } from 'react';
 import localFont from "next/font/local";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
@@ -8,7 +9,11 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import 'react-toastify/dist/ReactToastify.css';
 import Providers from "../context/provider";
 import { ToastContainer } from "react-toastify";
+
+import GoogleAnalytics from "../components/Google-Analytics";
+
 import { headers } from "next/headers";
+
 
 
 const geistSans = localFont({
@@ -39,6 +44,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
       <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet"/>
+
+      <Suspense fallback={null}>
+        <GoogleAnalytics GA_MEASUREMENT_ID='G-7Q75HNHMKY' />
+      </Suspense>
+      
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

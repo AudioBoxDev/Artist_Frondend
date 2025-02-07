@@ -49,17 +49,19 @@ const getStarted = async() => {
 					/>
 				</div>
 				<div className="w-full lg:w-1/2 text-center lg:text-left">
-					<h2 className="md:text-5xl text-3xl font-semibold mb-4">
-						Fan Engagement & NFT Exclusives
-					</h2>
-					<p className="text-gray-400 mb-8">
-						Bring fans closer with exclusive releases and collectible music
-						NFTs, making every interaction a unique part of your journey.
-					</p>
+					<div>
+						<h2 className="md:text-5xl text-3xl font-semibold mb-4">
+							Fan Engagement & NFT Exclusives
+						</h2>
+						<p className="text-gray-400 mb-8">
+							Give your fans something special exclusive drops they won’t find anywhere else and engage your audience with interactive experiences because music is more than just sound
+						</p>
+					</div>
+
 
 					<button
 						onClick={getStarted}
-						className="bg-gradient-to-r from-[#B1198E] p-1 to-[#B81A3F] text-white text-sm px-8 py-3 rounded-3xl"
+						className="bg-gradient-to-r from-[#B1198E] p-1 to-[#B81A3F] text-white text-sm px-8 py-3 rounded-3xl duration-300 hover:scale-105"
 					>
 						Get Started
 					</button>

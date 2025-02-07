@@ -1,6 +1,9 @@
 import {
 	CircleDollarSign,
 	CirclePlay,
+	CircleUserRound,
+	CircleUserRoundIcon,
+	Verified,
 } from "lucide-react";
 import React from "react";
 
@@ -8,9 +11,9 @@ const AudioBlocksFeatures = () => {
 	return (
 		<div className="bg-[#0E070C] font-roboto w-11/12 mx-auto rounded-xl text-white py-16 my-7 px-8">
 			<div className="text-center mb-12">
-				<h1 className="text-4xl font-bold mb-2">Easy steps to begin</h1>
+				<h1 className="text-4xl font-bold mb-2">Easy Steps to begin</h1>
 				<p className="text-gray-400">
-					From discovering new tracks to supporting your favorite artists.
+					Lets guide you on how to setup your AudioBlocks account
 				</p>
 			</div>
 
@@ -19,14 +22,14 @@ const AudioBlocksFeatures = () => {
 					<div className="flex items-center mb-4">
 						<div className="border-[#3B3B3B] border-2 p-1 rounded-full">
 							<span aria-label="music-experience" className="text-[#3B3B3B]">
-								<CirclePlay />
+								
+								<Verified/>
 							</span>
 						</div>
-						<h2 className="ml-4 text-xl font-semibold">Join & Verify</h2>
+						<h2 className="ml-4 text-xl font-semibold">Connect Wallet</h2>
 					</div>
 					<p className="text-gray-400">
-						Enjoy uninterrupted, high-quality streaming with a user-friendly
-						interface .
+						Securely link your wallet to setup your account, manage your earnings, access exclusive NFTs, and take full control of your music sales.
 					</p>
 				</div>
 
@@ -35,15 +38,15 @@ const AudioBlocksFeatures = () => {
 					<div className="flex items-center mb-4">
 						<div className="border-[#3B3B3B] border-2 p-1 rounded-full">
 							<span aria-label="music-experience" className="text-[#3B3B3B]">
-								<CirclePlay />
+								<CircleUserRoundIcon />
 							</span>
 						</div>
 						<h2 className="ml-4 text-xl font-semibold">
-							Customize & Upload Your Music
+							Setup your profile
 						</h2>
 					</div>
 					<p className="text-gray-400">
-						Enjoy uninterrupted listening with an ad-free environment.
+						Create a standout artist profile that showcases your music, connects with fans and listeners
 					</p>
 				</div>
 
@@ -56,11 +59,11 @@ const AudioBlocksFeatures = () => {
 							</span>
 						</div>
 						<h2 className="ml-4 text-xl font-semibold">
-							Engage Directly with Fans
+							Upload your music
 						</h2>
 					</div>
 					<p className="text-gray-400">
-						Enjoy uninterrupted listening with an ad-free environment.
+						Share your sound with the world in just a few clicks and start earning from every stream.
 					</p>
 				</div>
 
@@ -73,11 +76,11 @@ const AudioBlocksFeatures = () => {
 							</span>
 						</div>
 						<h2 className="ml-4 text-xl font-semibold">
-							Track Earnings & Grow
+							Track Earnings and Growth
 						</h2>
 					</div>
 					<p className="text-gray-400">
-						Enjoy uninterrupted listening with an ad-free environment.
+						Monitor your revenue, streaming stats, and fan engagement
 					</p>
 				</div>
 			</div>
