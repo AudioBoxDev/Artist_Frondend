@@ -13,7 +13,7 @@ const WalletPage = () => {
 			router.push("/dashboard/profile");
 		}
 	}, [artistProfileDetails, isLoading, router]);
-	
+
 	const TxnDetails = () => {
 		router.push("/dashboard/transactions");
 	};
@@ -42,7 +42,7 @@ const WalletPage = () => {
 						</div>
 						<div>
 							<p className="text-xs">Balance</p>
-							<p className="text-lg font-semibold">1000</p>
+							<p className="text-lg font-semibold">0</p>
 						</div>
 					</div>
 					<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -51,7 +51,7 @@ const WalletPage = () => {
 						</div>
 						<div>
 							<p className="text-xs">Streaming Point</p>
-							<p className="text-lg font-semibold">500 SP</p>
+							<p className="text-lg font-semibold">0 SP</p>
 						</div>
 					</div>
 					<div className="bg-[#100D0F] p-4 flex items-center space-x-4 rounded-lg">
@@ -60,7 +60,7 @@ const WalletPage = () => {
 						</div>
 						<div>
 							<p className="text-xs">NFT Assets</p>
-							<p className="text-lg font-semibold">50</p>
+							<p className="text-lg font-semibold">0</p>
 						</div>
 					</div>
 				</div>
