@@ -32,6 +32,7 @@ export const uploadProfileDetails = () => {
 	const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
 	const [artistProfileDetails, setArtistProfileDetails] =
 		useState<ArtistProfileDetails | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const { writeContractAsync } = useWriteContract();
 
@@ -166,6 +167,7 @@ export const uploadProfileDetails = () => {
 	});
 
 	const fetchProfileDetails = async (profileData: any) => {
+		setIsLoading(true);
 		try {
 			const gateway = profileData.artistCid.replace(
 				"ipfs://",
@@ -178,7 +180,9 @@ export const uploadProfileDetails = () => {
 			});
 			const data = await response.data;
 			setArtistProfileDetails(data);
+			setIsLoading(false);
 		} catch (error: any) {
+			setIsLoading(false);
 			console.error("Error fetching profile details:", error.message);
 		}
 	};
@@ -196,5 +200,6 @@ export const uploadProfileDetails = () => {
 		writeToContract,
 		fetchProfileDetails,
 		artistProfileDetails,
+		isLoading
 	};
 };

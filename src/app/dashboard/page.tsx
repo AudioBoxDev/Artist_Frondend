@@ -14,23 +14,49 @@ import Image from "next/image";
 import { Wallet } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { uploadProfileDetails } from "@/hooks/uploadProfileDetails";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
 	const [songStats, setSongStats] = useState<any[]>([]);
+	const [artistStats, setArtistStats] = useState<any>(null);
 	const jwt = Cookies.get("audioblocks_artist_jwt");
+	const url = process.env.NEXT_PUBLIC_API_URL;
+	const route = useRouter();
+	const { artistProfileDetails, isLoading } = uploadProfileDetails();
+
+
+	useEffect(() => {
+		if (!isLoading && !artistProfileDetails) {
+			route.push("/dashboard/profile");
+		}
+	}, [artistProfileDetails, isLoading, route]);
+
+	const getArtistStat = async () => {
+		try {
+			const response = await axios.get(`${url}/user/get-artist-stats`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${jwt}`,
+				},
+			});
+
+			if (response.data.success) {
+				console.log(response.data.data);
+				setArtistStats(response.data.data); // Store the song stats in state
+			}
+		} catch (error: any) {}
+	};
 
 	useEffect(() => {
 		const fetchArtistSongStats = async () => {
 			try {
-				const response = await axios.get(
-					"https://backend-6upv.onrender.com/song/get-artist-song-stats",
-					{
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${jwt}`,
-						},
+				const response = await axios.get(`${url}/song/get-artist-song-stats`, {
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${jwt}`,
 					},
-				);
+				});
 
 				if (response.data.success) {
 					setSongStats(response.data.data); // Store the song stats in state
@@ -39,7 +65,7 @@ const Dashboard = () => {
 				console.log(error.message);
 			}
 		};
-
+		getArtistStat();
 		fetchArtistSongStats();
 	}, []);
 
@@ -126,7 +152,7 @@ const Dashboard = () => {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div className="bg-[#100D0F] p-6 rounded-lg">
 					<h2 className="text-xl font-semibold mb-4">Top Albums</h2>
-					<ul>
+					{/* <ul>
 						<li className="flex justify-between py-2 border-b border-gray-700">
 							<span>#</span>
 							<span>Albums</span>
@@ -156,39 +182,40 @@ const Dashboard = () => {
 							</span>
 							<span>235</span>
 						</li>
-					</ul>
+					</ul> */}
+
+					<p>coming soon</p>
 				</div>
 
 				<div className="bg-[#100D0F] p-6 rounded-lg">
 					<h2 className="text-xl font-semibold mb-4">Top Songs</h2>
 					<ul>
 						<li className="flex justify-between py-2 border-b border-gray-700">
-            <div className="flex space-x-10">
-              <span>#</span>
-							<span>Songs</span>
-              </div>
+							<div className="flex space-x-10">
+								<span>#</span>
+								<span>Songs</span>
+							</div>
 							<span>Streams</span>
 						</li>
 						{songStats.map((song, index) => (
-							<li className="flex justify-between py-2 border-b border-gray-700">
+							<li key={index} className="flex justify-between py-2 border-b border-gray-700">
 								<div className="flex space-x-10">
-                <span>1.</span>
-								<span className="flex items-center">
-									<img
-										src={song?.image.replace(
-                      "ipfs://",
-                      `https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
-                    )}
-										className="w-5 h-5 rounded-full mr-2"
-										alt=""
-									/>{" "}
-									{song.name}
-								</span>
-                </div>
+									<span>1.</span>
+									<span className="flex items-center">
+										<img
+											src={song?.image.replace(
+												"ipfs://",
+												`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/`,
+											)}
+											className="w-5 h-5 rounded-full mr-2"
+											alt=""
+										/>{" "}
+										{song.name}
+									</span>
+								</div>
 								<span>{song.totalStreams}</span>
 							</li>
 						))}
-						
 					</ul>
 				</div>
 			</div>

@@ -24,9 +24,9 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 	const { disconnect } = useDisconnect();
 
 	const disconnectWallet = () => {
-		Cookies.remove("audioblocks_artist_jwt")
+		Cookies.remove("audioblocks_artist_jwt");
 		disconnect();
-		route.push( "/" );
+		route.push("/");
 	};
 
 	return (
@@ -37,23 +37,28 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 					className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
 				></div>
 			)}
-			<div 
+			<div
 				className={`bg-custom-gradient z-30 overflow-y-scroll  lg:translate-x-0 scrollbar-hide lg:block transform transition-transform duration-300  fixed h-screen ${
 					isOpen ? "translate-x-0" : "-translate-x-96"
 				} bg-black text-white text-base p-5`}
 			>
 				<div className="flex">
 					<Link href="/" className="flex items-center space-x-3 mb-10">
-						<div className="bg-pink-500 rounded-full h-10 w-10"></div>
+						<img
+							src="/images/logo1.png"
+							height={30}
+							width={30}
+							alt="logo"
+							className="rounded-full"
+						/>
 						<h1 className="text-xl font-semibold text-pink-400">AudioBlocks</h1>
 					</Link>
-					
-						<ArrowBigLeft
-							onClick={toggleClose}
-							className="lg:hidden ml-5 mt-3 block cursor-pointer"
-							size={16}
-						/>
-					
+
+					<ArrowBigLeft
+						onClick={toggleClose}
+						className="lg:hidden ml-5 mt-3 block cursor-pointer"
+						size={16}
+					/>
 				</div>
 
 				<nav className="flex flex-col justify-between h-4/5">
@@ -111,9 +116,8 @@ const Sidebar = ({ isOpen, toggleClose }: any) => {
 							to="/dashboard/profile"
 							isActive={pathname === "/dashboard/profile"}
 						/>
-						<div  onClick={disconnectWallet} >
-
-						<SidebarItems icon={PowerIcon} label="Log Out" to="#" />
+						<div onClick={disconnectWallet}>
+							<SidebarItems icon={PowerIcon} label="Log Out" to="#" />
 						</div>
 					</div>
 				</nav>
