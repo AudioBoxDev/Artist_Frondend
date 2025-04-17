@@ -61,6 +61,11 @@ const config: Config = {
 					"linear-gradient(180deg, rgba(40, 10, 34, 0.36) 0%, rgba(33, 21, 36, 0.36) 100%)",
 				"custom-box-gradient":
 					"linear-gradient(99.57deg, #4B0B3E 0%, #274749 98.82%)",
+				"dot-pattern": `radial-gradient(white 1px, transparent 1px)`,
+			},
+		
+			backgroundSize: {
+				"dot-pattern": "20px 20px",
 			},
 			fontFamily: {
 				roboto: ["Roboto", "sans-serif"],
@@ -98,8 +103,8 @@ const config: Config = {
 				"music-bar-1": "music-bar 1s ease-in-out infinite",
 				"music-bar-2": "music-bar 1.2s ease-in-out infinite",
 				"music-bar-3": "music-bar 0.8s ease-in-out infinite",
-				'spin-slow': 'spin 2.5s linear infinite',
-				'spin': 'spin 1s linear infinite'
+				"spin-slow": "spin 2.5s linear infinite",
+				spin: "spin 1s linear infinite",
 			},
 		},
 	},
