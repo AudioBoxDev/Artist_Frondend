@@ -48,6 +48,7 @@ const getStarted = async() => {
 	return (
 		<>
 			<div className="bg-gradient-to-br flex flex-col md:pt-32 pt-36 pb-12 font-roboto from-[#1d021820] to-transparent md:h-screen justify-center items-center relative overflow-hidden">
+			<div className="absolute inset-0 -z-20 bg-dot-pattern opacity-10 pointer-events-none" />
 				<motion.div
 					className="absolute inset-0 flex justify-center pointer-events-none"
 					animate={{

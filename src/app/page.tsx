@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "react-toastify";
 import { useAccount } from "wagmi";
 import Cookies from "js-cookie";
+import GoToTopButton from "@/components/GoToTopButton";
 
 export default function Home() {
   const { artistProfileDetails } = uploadProfileDetails();
@@ -72,7 +73,7 @@ export default function Home() {
         </div>
       </div>
       
-
+      <GoToTopButton />
       <Footer />
   </>
     
